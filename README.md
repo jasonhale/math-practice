@@ -1,4 +1,5 @@
 # math-practice
+[![Stories in Ready](https://badge.waffle.io/jasonhale/math-practice.svg?label=ready&title=Ready)](http://waffle.io/jasonhale/math-practice)
 
 *A simple page to generate simple practice math problems.*
 
