@@ -4,41 +4,6 @@ import SettingsUI from './SettingsUI';
 import Problem from './Problem.js';
 import {generateProblems} from './utils.js';
 
-function generateProblems(){
-  return [
-    {
-      numA: 0,
-      numB: 0,
-      operator: '+',
-      answer: 0
-    },
-    {
-      numA: 0,
-      numB: 1,
-      operator: '+',
-      answer: 1
-    },
-    {
-      numA: 0,
-      numB: 2,
-      operator: '+',
-      answer: 2
-    },
-    {
-      numA: 1,
-      numB: 1,
-      operator: '+',
-      answer: 2
-    },
-    {
-      numA: 2,
-      numB: 3,
-      operator: '+',
-      answer: 5
-    }
-  ];
-}
-
 class App extends Component {
   constructor(props){
     super(props);
@@ -48,16 +13,21 @@ class App extends Component {
       problems: [],
       operations: this.props.operations,
       count: this.props.count,
-      minmax: this.props.minmax,
+      operands: this.props.operands,
       probStyle: this.props.probStyle
     }
   }
 
   componentWillMount(){
     if(!this.state.isLoaded) {
-      const problems = generateProblems();
+      const problems = generateProblems(this.state.operations, this.state.count, this.state.operands);
       this.setState({'isLoaded':true, 'problems':problems});
     }
+  }
+
+  resetProblems = () => {
+    const problems = generateProblems(this.state.operations, this.state.count, this.state.operands);
+    this.setState({'problems': problems});
   }
 
   render() {
@@ -76,8 +46,10 @@ class App extends Component {
             
             <span className="button-list-item inline-input">
               <label htmlFor="max-count" className="text-small">Total problems: </label>
+
               <input name="max-count" className="input input-simple js-max-count" type="number" placeholder="Enter Number of Problems..."/>
-              <button className="button-list-item button js-regenerate">
+              
+              <button className="button-list-item button js-regenerate" onClick={this.resetProblems}>
                 <i className="fa fa-refresh"/> Create New Questions
               </button>
             </span>
@@ -87,13 +59,13 @@ class App extends Component {
 
         <section id="pagecontent" className="mainColumn mainSection">
           <form id="MathSentences" name="MathSentences">
-            <ul className="problems js-problems problems-vertical">
+            <ul className={`problems js-problems problems-${this.state.probStyle}`}>
               {
                 problems.map((problem, i) => {
                   return (
                     <Problem
                       key={`problem${i}`}
-                      iteration={i}
+                      index={i}
                       name={`problem${i}`}
                       operator={problem.operator}
                       numA={problem.numA}

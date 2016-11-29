@@ -1,9 +1,16 @@
 const initialState = {
-  "operations": ["addition","subtraction"],
+  "operations": {
+    "addition": true,
+    "subtraction": true,
+    "multiplication": false,
+    "division": false
+  },
   "count": 50,
-  "minmax": {
+  "operands": {
+    "setBy": "minmax",
     "min": 0,
-    "max": 9
+    "max": 9,
+    "maxAnswer": 20
   },
   "probStyle": "vertical"
 };

@@ -172,6 +172,11 @@ input,
 .input-simple {
   max-width: 3rem;
 }
+.input-simple::-webkit-inner-spin-button, 
+.input-simple::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
 #pageUI .inline-input .text-small {
   font-weight: bold;
 }

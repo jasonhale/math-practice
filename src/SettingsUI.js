@@ -6,7 +6,7 @@ class SettingsUI extends React.Component {
   // }
 
   render(){
-    return(<i>settings</i>);
+    return(<span/>);
   }
 }
 
