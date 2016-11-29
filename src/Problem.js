@@ -11,12 +11,13 @@ class Problem extends Component {
 			operator,
 			numA,
 			numB,
-			answer
+			answer,
+			iteration
 		} = this.props;
 
 		return (
-			<li className="prob template" dataIndex="" dataProblemtype="" dataAnswer={answer}>
-				<label className="question" for={name}>
+			<li className="prob template" data-index={iteration} data-Problemtype="addition" data-Answer={answer}>
+				<label className="question" htmlFor={name}>
 					<span className="num-a">{numA}</span>
 					<span className="operator">{operator}</span>
 					<span className="num-b">{numB}</span>

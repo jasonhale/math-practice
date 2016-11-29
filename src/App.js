@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import SettingsUI from './SettingsUI';
 import Problem from './Problem.js';
+import {generateProblems} from './utils.js';
 
 function generateProblems(){
   return [
@@ -52,13 +53,15 @@ class App extends Component {
     }
   }
 
-  render() {
-    let problems = this.state.problems;
-
+  componentWillMount(){
     if(!this.state.isLoaded) {
-      problems = generateProblems();
+      const problems = generateProblems();
       this.setState({'isLoaded':true, 'problems':problems});
     }
+  }
+
+  render() {
+    const problems = this.state.problems;
 
     return (
       <div id="siteWrap" className="site-wrap">
@@ -72,7 +75,7 @@ class App extends Component {
             <button className="button-list-item button clearanswers" onClick={this.clearAnswers}><i className="fa fa-eraser"/> Clear My Answers</button>
             
             <span className="button-list-item inline-input">
-              <label for="max-count" className="text-small">Total problems: </label>
+              <label htmlFor="max-count" className="text-small">Total problems: </label>
               <input name="max-count" className="input input-simple js-max-count" type="number" placeholder="Enter Number of Problems..."/>
               <button className="button-list-item button js-regenerate">
                 <i className="fa fa-refresh"/> Create New Questions
@@ -89,6 +92,8 @@ class App extends Component {
                 problems.map((problem, i) => {
                   return (
                     <Problem
+                      key={`problem${i}`}
+                      iteration={i}
                       name={`problem${i}`}
                       operator={problem.operator}
                       numA={problem.numA}
