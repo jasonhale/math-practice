@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
-import './App.css';
-import SettingsUI from './SettingsUI';
-import Problem from './Problem.js';
-import {generateProblems} from './utils.js';
+import './css/App.css';
+import './css/styles.css';
+import SettingsUI from './components/SettingsUI';
+import Problem from './components/Problem.js';
+import Modal from './components/Modal.js';
+import {generateProblems} from './tools/utils.js';
 
 class App extends Component {
   constructor(props){
@@ -14,7 +16,8 @@ class App extends Component {
       operations: this.props.operations,
       count: this.props.count,
       operands: this.props.operands,
-      probStyle: this.props.probStyle
+      probStyle: this.props.probStyle,
+      answersOpen: false
     }
   }
 
@@ -30,8 +33,22 @@ class App extends Component {
     this.setState({'problems': problems});
   }
 
+  checkAnswers = () => {
+    console.log('Check answers...');
+    this.toggleAnswersModal();
+  }
+
+  clearAnswers = () => {
+    console.log('Clear answers...');
+  }
+
+  toggleAnswersModal = () => {
+    this.setState({ 'answersOpen': !this.state.answersOpen});
+  }
+
+
   render() {
-    const problems = this.state.problems;
+    const cY = new Date().getFullYear(); // for current year in footer for copyright declaration.
 
     return (
       <div id="siteWrap" className="site-wrap">
@@ -44,15 +61,11 @@ class App extends Component {
             <button className="button-list-item button checkanswers" onClick={this.checkAnswers}><i className="fa fa-check"/> Check My Answers</button>
             <button className="button-list-item button clearanswers" onClick={this.clearAnswers}><i className="fa fa-eraser"/> Clear My Answers</button>
             
-            <span className="button-list-item inline-input">
-              <label htmlFor="max-count" className="text-small">Total problems: </label>
-
-              <input name="max-count" className="input input-simple js-max-count" type="number" placeholder="Enter Number of Problems..."/>
-              
-              <button className="button-list-item button js-regenerate" onClick={this.resetProblems}>
-                <i className="fa fa-refresh"/> Create New Questions
-              </button>
-            </span>
+            <label htmlFor="max-count" className="text-small button-list-item inline-input">Total problems: <input name="max-count" className="input input-simple js-max-count" type="number" placeholder="Enter Number of Problems..."/></label>
+            
+            <button className="button-list-item button js-regenerate" onClick={this.resetProblems}>
+              <i className="fa fa-refresh"/> Create New Questions
+            </button>
           </div>
         </section>
         <hr className="mainColumn" />
@@ -61,7 +74,7 @@ class App extends Component {
           <form id="MathSentences" name="MathSentences">
             <ul className={`problems js-problems problems-${this.state.probStyle}`}>
               {
-                problems.map((problem, i) => {
+                this.state.problems.map((problem, i) => {
                   return (
                     <Problem
                       key={`problem${i}`}
@@ -78,7 +91,14 @@ class App extends Component {
             </ul>
           </form>
         </section>
-      
+        
+
+        <br/>
+        <hr/>
+        <footer>&copy;{cY} IEatPaint Studio&trade;</footer>
+
+        <Modal show={this.state.answersOpen} toggle={this.toggleAnswersModal}/>
+
       </div>
     );
   }

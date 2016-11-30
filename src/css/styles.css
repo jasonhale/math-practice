@@ -180,22 +180,27 @@ input,
 #pageUI .inline-input .text-small {
   font-weight: bold;
 }
+
 .button-list {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   text-align: center;
 }
-.button-list-item {
-  display: inline-block;
-}
-.button-list-item.button,
-.button-list-item .input {
-  line-height: 1rem;
-}
-.button-list label {
-  text-align: right;
-}
-.button-list label + input {
-  text-align: left;
-}
+  .button-list-item {
+    display: inline-block;
+  }
+  .button-list-item.button,
+  .button-list-item .input {
+    line-height: 1rem;
+  }
+  /*.button-list label {
+    text-align: right;
+  }
+  .button-list label + input {
+    text-align: left;
+  }*/
+
 .problems {
   margin: 0;
   padding: 0 0 5rem;
@@ -396,8 +401,10 @@ input,
   font-style: italic;
   text-shadow: none;
 }
+
 /* Modal popup */
 .modal {
+  display: none;
   position: fixed;
   top: 0;
   right: 0;
@@ -405,7 +412,7 @@ input,
   left: 0;
   z-index: 100;
 }
-.flexbox .modal {
+.modal.open {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -418,6 +425,10 @@ input,
   bottom: 0;
   left: 0;
   z-index: 100;
+
+  opacity: 0;
+  transition: opacity 1s;
+  will-change: contents;
 }
 .modal-box {
   width: 50%;
@@ -428,6 +439,17 @@ input,
   box-shadow: 5px 5px 10px black;
   position: relative;
   z-index: 101;
+
+  opacity: 0;
+  transition: opacity 1s;
+}
+.modal-overlay,
+.modal-box {
+  
+}
+.modal.open .modal-overlay,
+.modal.open .modal-box {
+  opacity: 1;
 }
 .modal-answer .answer-total {
   font-weight: bold;
