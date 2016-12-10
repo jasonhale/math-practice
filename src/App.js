@@ -11,20 +11,20 @@ class App extends Component {
     super(props);
 
     this.state = {
-      isLoaded: false,
+      isProblemsGenerated: false,
       problems: [],
+      answersOpen: false,
       operations: this.props.operations,
       count: this.props.count,
       operands: this.props.operands,
-      probStyle: this.props.probStyle,
-      answersOpen: false
+      probStyle: this.props.probStyle
     }
   }
 
   componentWillMount(){
-    if(!this.state.isLoaded) {
+    if(!this.state.isProblemsGenerated) {
       const problems = generateProblems(this.state.operations, this.state.count, this.state.operands);
-      this.setState({'isLoaded':true, 'problems':problems});
+      this.setState({'isProblemsGenerated':true, 'problems':problems});
     }
   }
 
@@ -46,15 +46,46 @@ class App extends Component {
     this.setState({ 'answersOpen': !this.state.answersOpen});
   }
 
+  updateSettings = (settings) => {
+    this.saveSettings(settings);
+    this.setState({
+      'operations': settings.operations,
+      'count': settings.count,
+      'operands': settings.operands,
+      'probStyle': settings.probStyle
+    });
+  }
+
+  saveSettings = (settings) => {
+    console.log('saving...');
+    let settingsToSave = {
+      'operations': settings.operations,
+      'count': settings.count,
+      'operands': settings.operands,
+      'probStyle': settings.probStyle
+    };
+    // if settings are saved, delete them, then save.
+    if(localStorage.getItem('mathpractice')){
+      localStorage.removeItem('mathpractice');
+    }
+    localStorage.setItem('mathpractice', JSON.stringify(settingsToSave));
+    console.log('...saved.');
+  }
 
   render() {
-    const cY = new Date().getFullYear(); // for current year in footer for copyright declaration.
+    const Y = new Date().getFullYear(); // for current year in footer for copyright declaration.
 
     return (
       <div id="siteWrap" className="site-wrap">
         <header className="mainColumn mainSection"><h1>Math Practice Time</h1></header>
 
-        <SettingsUI/>
+        <SettingsUI
+          operations={this.state.operations}
+          count={this.state.count}
+          operands={this.state.operands}
+          probStyle={this.state.probStyle}
+          onSave={this.updateSettings}
+        />
 
         <section id="pageUI" className="mainColumn mainSection">
           <div className="button-list">
@@ -95,7 +126,7 @@ class App extends Component {
 
         <br/>
         <hr/>
-        <footer>&copy;{cY} IEatPaint Studio&trade;</footer>
+        <footer>&copy;{Y} IEatPaint Studio&trade;</footer>
 
         <Modal show={this.state.answersOpen} toggle={this.toggleAnswersModal}/>
 

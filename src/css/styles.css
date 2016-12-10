@@ -342,7 +342,9 @@ input,
 .button-list-grid .button-grid-input {
   display: none;
 }
-.button-list-grid .button-grid-input:checked + .button {
+.button-list-grid .button-grid-input:checked + .button,
+.button-list-grid .button-grid-input.selected + .button,
+.button-list-grid .button.selected {
   background-color: #3d5eff;
   color: white;
 }
@@ -385,12 +387,12 @@ input,
 .radio-section-input {
   display: none;
 }
-.radio-section-input:checked + .radio-section-label {
+.settings-sub-subtitle.button.selected {
   background-color: #3d5eff;
   color: white;
 }
-.radio-section-input:checked + .radio-section-label + .radio-section-item,
-.radio-section-input:checked + .radio-section-label + .radio-section-item + .radio-section-item {
+.settings-sub-subtitle.button.selected + .radio-section-item,
+.settings-sub-subtitle.button.selected + .radio-section-item + .radio-section-item {
   opacity: 1;
 }
 .error-message {

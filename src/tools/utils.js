@@ -4,12 +4,12 @@
 
 /* ## Generate problems from config settings */
 // {
-  // "operations": {
-  //   "addition": true,
-  //   "subtraction": false,
-  //   "multiplication": false,
-  //   "division": false
-  // },
+//   "operations": {
+//     "addition": true,
+//     "subtraction": false,
+//     "multiplication": false,
+//     "division": false
+//   },
 //   "count": 50,
 //   "operands": {
 //     "setBy": "minmax",
@@ -26,7 +26,7 @@
 //       answer: 0
 //     }
 
-const operandsymbols = {
+const operandSymbols = {
   'addition': '+',
   'subtraction': '-',
   'multiplication': 'x',
@@ -62,7 +62,7 @@ export function generateProblems(operations, count, operands) {
           numB = getRandomInt(operands.min, operands.max), // ... of min & max declarations
           answer;
       const probtype = (currentProbTypes.length > 1) ? currentProbTypes[Math.floor(Math.random() * currentProbTypes.length)] : currentProbTypes[0];
-      const operator = operandsymbols[probtype];
+      const operator = operandSymbols[probtype];
 
       // in the case of subtraction, lets just put the larger number on top for now so we don't have to deal with negative numbers.
       if(probtype === 'subtraction' && numA < numB) {
@@ -107,4 +107,6 @@ export function generateProblems(operations, count, operands) {
   }
 
   return equations;
-}
+};
+
+export {operandSymbols};

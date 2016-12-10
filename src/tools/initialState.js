@@ -1,7 +1,7 @@
 const initialState = {
   "operations": {
     "addition": true,
-    "subtraction": true,
+    "subtraction": false,
     "multiplication": false,
     "division": false
   },

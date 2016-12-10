@@ -1,17 +1,100 @@
 import React from 'react';
+import {operandSymbols} from '../tools/utils';
 
 class SettingsUI extends React.Component {
   constructor(props){
     super(props);
 
     this.state = {
-      settingsOpen: false
-    }
+      'settingsOpen': false,
+			'settingsUpdated': false,
+			'currentSettings': {
+				'operations': props.operations,
+				'count': props.count,
+				'operands': props.operands,
+				'probStyle': props.probStyle
+			}
+		}
   }
+
+	initialSettings = {
+		'operations': this.props.operations,
+		'count': this.props.count,
+		'operands': this.props.operands,
+		'probStyle': this.props.probStyle
+	};
 
   toggleSettings = () => {
     this.setState({ 'settingsOpen': (!this.state.settingsOpen) });
   }
+
+	// Determine if a change for the type of operations to use.
+	setOperation = (op, cs) => {
+		// toggle the operation being set.
+		let copySettings = Object.assign({}, cs);
+		copySettings.operations[op] = !copySettings.operations[op];
+		// update currentSettings;
+		this.setState({'currentSettings': copySettings});
+		console.log(copySettings.operations[op]);
+		this.checkState();
+	}
+
+	checkState = () => {
+		if((this.state.currentSettings !== this.initialSettings) && !this.state.settingsUpdated) {
+			this.setState({'settingsUpdated': true});
+			console.log('state.settingsUpdated : '+this.state.settingsUpdated);
+			console.log(this.state.currentSettings);
+			console.log(this.initialSettings);
+		}
+	}
+
+	setOperand = (op, cs) => {
+		let copySettings = Object.assign({}, this.state.currentSettings);
+		copySettings.operands.setBy = op;
+		this.setState('currentSettings' : copySettings);
+		//cs.operands.setBy = op;
+		if(cs !== this.initialSettings){
+			this.setState({'settingsUpdated': true});
+		} else {
+			this.setState({'settingsUpdated': false});
+		}
+	}
+
+	setByMinChange = (event) => {
+		let copySettings = Object.assign({}, this.state.currentSettings);
+		const value = event.target.value ? event.target.value : 0;
+		copySettings.operands.min = parseInt(value, 10);
+		this.setState({'currentSettings': copySettings});
+		this.checkState();
+	}
+
+	setByMaxChange = (event) => {
+		let copySettings = Object.assign({}, this.state.currentSettings);
+		const value = event.target.value ? event.target.value : 0;
+		copySettings.operands.max = parseInt(value, 10);
+		this.setState({'currentSettings':copySettings});
+		this.checkState();
+	}
+
+	setStyle = (probStyle, currentSettings) => {
+		let copySettings = Object.assign({}, this.state.currentSettings);
+		copySettings.probStyle = probStyle;
+		this.setState({'currentSettings': copySettings});
+		this.checkState();
+	}
+
+	applySettings = () => {
+		this.initialSettings = this.state.currentSettings;
+		this.props.onSave(this.state.currentSettings);
+		this.setState({settingsUpdated: false});
+	};
+
+	resetSettings = () => {
+		this.setState({
+			'currentSettings': this.initialSettings,
+			'settingsUpdated': false
+		});
+	}
 
   render(){
     return(
@@ -25,24 +108,30 @@ class SettingsUI extends React.Component {
 					<h3 className="section-sub-title">Problem Types</h3>
 
 					<ul className="settings-list input-list button-list-grid validate types">
-						<li className="settings-list-item button-grid-item">
-							<input className="operand-input operand-addition button-grid-input js-settings-input js-settings-operand" type="checkbox" id="operandAddition" value="addition" checked/>
-							<label className="operand-label button" for="operandAddition">+</label>
-						</li>
+						<OperationSelector
+							operation="addition"
+							currentSettings={this.state.currentSettings}
+							clickAction={this.setOperation}
+						/>
 
-            <li className="settings-list-item button-grid-item">
-							<input className="operand-input operand-subtraction button-grid-input js-settings-input js-settings-operand" type="checkbox" id="operandSubtraction"/>
-							<label className="operand-label button" for="operandSubtraction">&minus;</label>
-						</li>
-
+            <OperationSelector
+							operation="subtraction"
+							currentSettings={this.state.currentSettings}
+							clickAction={this.setOperation}
+						/>
+						
 						{/*
-						<li className="settings-list-item button-grid-item">
-							<input className="operand-input operand-multiplication button-grid-input js-settings-input js-settings-operand" type="checkbox" id="operandMultiplication">
-							<label className="operand-label button" for="operandMultiplication">x</label>
-						</li><li className="settings-list-item button-grid-item">
-							<input className="operand-input operand-division button-grid-input js-settings-input js-settings-operand" type="checkbox" id="operandAdditionDivision">
-							<label className="operand-label button" for="operandAdditionDivision">&frasl;</label>
-						</li>
+						<OperationSelector
+							operation="multiplication"
+							currentSettings={this.currentSettings}
+							clickAction={this.setOperation}
+						/>
+
+            <OperationSelector
+							operation="division"
+							currentSettings={this.currentSettings}
+							clickAction={this.setOperation}
+						/>
 						*/}
 					</ul>
 
@@ -52,60 +141,160 @@ class SettingsUI extends React.Component {
 
 				</div>
 
-				<div className="settings-section numbers">
+        <div className="settings-section numbers">
 					<h3 className="section-sub-title">Numbers</h3>
 
 					<ul className="settings-list radio-section">
 						<li className="settings-list-item validate minmax">
-							<input className="js-setnumbers radio-section-input" type="radio" value="" name="setnumbers" id="setNumMinMax" checked/>
-							<label className="settings-sub-subtitle button radio-section-label" for="setNumMinMax">by Min/Max Numbers</label>
+
+							<SetBySelector
+								operand="minmax"
+								currentSettings={this.state.currentSettings}
+								text="by Min/Max Numbers"
+								clickAction={this.setOperand}
+							/>
+
 							<div className="settings-sublist-item radio-section-item">
-								<label for="smNumSize">Smallest Number</label>
-								<input className="js-setnumber js-numsize radio-section-item-input" type="number" value="0" min="0" id="smNumSize"/>
+								<label htmlFor="smNumSize">Smallest Number</label>
+								<input
+									className="radio-section-item-input"
+									type="number"
+									min="0"
+									value={this.state.currentSettings.operands.min}
+									id="smNumSize"
+									onChange={this.setByMinChange}
+									disabled={(this.state.currentSettings.operands.setBy !== 'minmax')}
+								/>
 							</div>
+
 							<div className="settings-sublist-item radio-section-item">
-								<label for="lgNumSize">Largest Number</label>
-								<input className="js-setnumber js-numsize radio-section-item-input" type="number" value="9" min="0" id="lgNumSize"/>
+								<label htmlFor="lgNumSize">Largest Number</label>
+								<input
+									className="radio-section-item-input"
+									type="number"
+									value={this.state.currentSettings.operands.max}
+									min="0"
+									id="lgNumSize"
+									onChange={this.setByMaxChange}
+									disabled={(this.state.currentSettings.operands.setBy !== 'minmax')}
+								/>
 							</div>
+
 							<div className="error-message">
 								<span>Smallest Number must be smaller than Largest Number</span>
 							</div>
 						</li>
 
+						{/*
 						<li className="settings-list-item maxamt">
-							<input className="js-setnumbers radio-section-input" type="radio" value="" name="setnumbers" id="setNumAnsTotal"/>
-							<label className="settings-sub-subtitle button radio-section-label" for="setNumAnsTotal">by Answer Total</label>
+							<SetBySelector
+								operand="minmax"
+								currentSettings={currentSettings}
+								text="by Answer Total"
+								clickAction={setOperand}
+							/>
 							<div className="settings-sublist-item radio-section-item">
-								<label for="totMaxAmt">Total Max Amount</label>
+								<label htmlFor="totMaxAmt">Total Max Amount</label>
 								<input className="js-setnumber js-totmaxamt radio-section-item-input" type="number" value="20" min="0" id="totMaxAmt" disabled/>
 							</div>
 						</li>
+						*/}
 					</ul>
 				</div>
 
 				<div className="settings-section probstyle">
 					<h3 className="section-sub-title">Style</h3>
 					<ul className="settings-list input-list input-radio button-list-grid">
-						<li className="settings-list-item button-grid-item">
-							<input className="probstyle-input probstyle-vertical js-probstyle-input button-grid-input" type="radio" id="probstyleVertical" name="probstyle" value="vertical" checked/>
-							<label className="probstyle-label button" for="probstyleVertical"><i className="fa fa-arrows-v"></i><span className="hide">Vertical</span></label>
-						</li><li className="settings-list-item button-grid-item">
-							<input className="probstyle-input probstyle-horizontal js-probstyle-input button-grid-input" type="radio" id="probstyleHorizontal" name="probstyle" value="horizontal"/>
-							<label className="probstyle-label button" for="probstyleHorizontal"><i className="fa fa-arrows-h"></i><span className="hide">Horizontal</span></label>
-						</li>
+						<StyleSelector
+							probStyle="vertical"
+							currentSettings={this.state.currentSettings}
+							clickAction={this.setStyle}
+						/>
+						<StyleSelector
+							probStyle="horizontal"
+							currentSettings={this.state.currentSettings}
+							clickAction={this.setStyle}
+						/>
 					</ul>
 				</div>
 
 				<hr/>
 
 				<div className="settings-section submit-section">
-					<button className="button settings-submit js-settings-submit"><i className="fa fa-play"></i> Apply</button>
-					<button className="button settings-reset js-settings-reset"><i className="fa fa-undo"></i> Reset</button>
+					<button
+						className="button settings-submit js-settings-submit"
+						disabled={!this.state.settingsUpdated}
+						onClick={this.applySettings}
+					><i className="fa fa-play"></i> Apply</button>
+
+					<button
+						className="button settings-reset js-settings-reset"
+						disabled={!this.state.settingsUpdated}
+						onClick={this.resetSettings}
+					><i className="fa fa-undo"></i> Reset</button>
 				</div>
 
 			</section>
     );
   }
+}
+
+const StyleSelector = ({probStyle, currentSettings, clickAction}) => {
+	const setStyle = () => {
+		clickAction(probStyle, currentSettings);
+	};
+	const isSelected = (probStyle === currentSettings.probStyle) ? 'selected' : '';
+	return(
+		<li className="settings-list-item button-grid-item">
+			<button
+				className={`probstyle-button button ${isSelected}`}
+				onClick={setStyle}
+			>
+				<i className={"fa fa-arrows-"+probStyle.charAt(0)}></i>
+				<span className="hide">{probStyle}</span>
+			</button>
+		</li>
+	);
+};
+
+const OperationSelector = ({operation, currentSettings, clickAction}) => {
+	const setOperation = () => {
+		// console.log(operation, currentSettings);
+		clickAction(operation, currentSettings);
+	}
+	return (
+		<li className="settings-list-item button-grid-item">
+			
+			<button
+				className={"operand-select button" + ((currentSettings.operations[operation]) ? ' selected' : '')}
+				onClick={setOperation}
+			>{operandSymbols[operation]}</button>
+
+			{/*
+			<input
+				className={`operand-input operand-${operation} button-grid-input`}
+				type="checkbox"
+				id={`operand${operation}`}
+				value={operation}
+				checked={currentSettings.operations[operation]}
+				onChange={setOperation}
+			/>
+			<label
+				className="operand-label button"
+				htmlFor={`operand${operation}`}
+			>{operandSymbols[operation]}</label>
+			*/}
+		</li>
+	);
+};
+
+const SetBySelector = ({operand, currentSettings, text, clickAction}) => {
+	const setOperand = () => {
+		clickAction(operand, currentSettings);
+	}
+	return (
+		<button className={'settings-sub-subtitle button'+ ((currentSettings.operands.setBy === operand) ? ' selected' : '')} onClick={setOperand}>{text}</button>
+	)
 }
 
 export default SettingsUI;
