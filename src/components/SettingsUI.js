@@ -9,7 +9,7 @@ class SettingsUI extends React.Component {
       'settingsOpen': false,
 			'settingsUpdated': false,
 			'currentSettings': {
-				'operations': props.operations,
+				'operations':  props.operations,
 				'count': props.count,
 				'operands': props.operands,
 				'probStyle': props.probStyle
@@ -34,30 +34,25 @@ class SettingsUI extends React.Component {
 		let copySettings = Object.assign({}, cs);
 		copySettings.operations[op] = !copySettings.operations[op];
 		// update currentSettings;
-		this.setState({'currentSettings': copySettings});
-		console.log(copySettings.operations[op]);
+		this.setState({
+			'currentSettings': copySettings,
+			'settingsUpdated': true
+		});
 		this.checkState();
 	}
 
 	checkState = () => {
-		if((this.state.currentSettings !== this.initialSettings) && !this.state.settingsUpdated) {
-			this.setState({'settingsUpdated': true});
-			console.log('state.settingsUpdated : '+this.state.settingsUpdated);
-			console.log(this.state.currentSettings);
-			console.log(this.initialSettings);
-		}
+		this.setState({
+			'settingsUpdated': (this.state.currentSettings !== this.initialSettings),
+			'settingsUpdated': true
+		});
 	}
 
 	setOperand = (op, cs) => {
 		let copySettings = Object.assign({}, this.state.currentSettings);
 		copySettings.operands.setBy = op;
-		this.setState('currentSettings' : copySettings);
-		//cs.operands.setBy = op;
-		if(cs !== this.initialSettings){
-			this.setState({'settingsUpdated': true});
-		} else {
-			this.setState({'settingsUpdated': false});
-		}
+		this.setState({'currentSettings' : copySettings});
+		this.checkState();
 	}
 
 	setByMinChange = (event) => {
@@ -90,6 +85,10 @@ class SettingsUI extends React.Component {
 	};
 
 	resetSettings = () => {
+		console.log('*** reset ***\n currentSettings: ' + JSON.stringify(this.state.currentSettings) + '\n initialSettings: ' + JSON.stringify(this.initialSettings) + '\n ... these are the same? ::'+ (JSON.stringify(this.state.currentSettings) === JSON.stringify(this.initialSettings)) + '::');
+		console.log(this.state.currentSettings);
+		console.log(this.initialSettings);
+				
 		this.setState({
 			'currentSettings': this.initialSettings,
 			'settingsUpdated': false

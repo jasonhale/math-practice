@@ -162,6 +162,9 @@ input,
 .button.focus {
   background-color: #ffffff;
 }
+.button[disabled] {
+  opacity: 0.3;
+}
 .text-small {
   font-size: .6rem;
 }
