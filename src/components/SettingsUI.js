@@ -43,8 +43,7 @@ class SettingsUI extends React.Component {
 
 	checkState = () => {
 		this.setState({
-			'settingsUpdated': (this.state.currentSettings !== this.initialSettings),
-			'settingsUpdated': true
+			'settingsUpdated': (this.state.currentSettings !== this.initialSettings)
 		});
 	}
 

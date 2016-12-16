@@ -46,6 +46,17 @@ class App extends Component {
     this.setState({ 'answersOpen': !this.state.answersOpen});
   }
 
+  updateCount = (event) => {
+    const settingsToSave = {
+      'operations': Object.assign({}, this.state.operations),
+      'count': parseInt(event.target.value, 10),
+      'operands': Object.assign({}, this.state.operands),
+      'probStyle': this.state.probStyle
+    }
+    this.saveSettings(settingsToSave);
+    this.setState({'count': parseInt(event.target.value, 10)});
+  }
+
   updateSettings = (settings) => {
     this.saveSettings(settings);
     this.setState({
@@ -89,14 +100,16 @@ class App extends Component {
 
         <section id="pageUI" className="mainColumn mainSection">
           <div className="button-list">
+
             <button className="button-list-item button checkanswers" onClick={this.checkAnswers}><i className="fa fa-check"/> Check My Answers</button>
             <button className="button-list-item button clearanswers" onClick={this.clearAnswers}><i className="fa fa-eraser"/> Clear My Answers</button>
             
-            <label htmlFor="max-count" className="text-small button-list-item inline-input">Total problems: <input name="max-count" className="input input-simple js-max-count" type="number" placeholder="Enter Number of Problems..."/></label>
+            <label htmlFor="max-count" className="text-small button-list-item inline-input">Total problems: <input name="max-count" className="input input-simple js-max-count" type="number" placeholder="Enter Number of Problems..." value={this.state.count} onChange={this.updateCount}/></label>
             
             <button className="button-list-item button js-regenerate" onClick={this.resetProblems}>
               <i className="fa fa-refresh"/> Create New Questions
             </button>
+
           </div>
         </section>
         <hr className="mainColumn" />
