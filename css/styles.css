@@ -172,6 +172,16 @@ input,
 .input-simple {
   max-width: 3rem;
 }
+footer {
+	clear: both;
+	overflow: hidden;
+}
+.footer-col {
+	float: left;
+}
+.footer-col + .footer-col {
+	float: right;
+}
 #pageUI .inline-input .text-small {
   font-weight: bold;
 }
