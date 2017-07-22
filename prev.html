@@ -1,0 +1,152 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Math Test</title>
+		<link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+		<link rel="stylesheet" type="text/css" href="css/styles.css">
+		<link rel="stylesheet" type="text/css" href="css/print.css" media="print">
+	</head>
+	<body>
+		<a class="corny" href="#" onclick="mt.addCornify(); return false;" style="opacity:0;position:absolute;">CLICK ME!!<br/>CLICK ME NOW!!</a>
+		<div id="siteWrap" class="site-wrap">
+			<header class="mainColumn mainSection">
+				<h1>Math Practice Time</h1>
+			</header>
+			<section id="settingsUI" class="settings mainColumn mainSection">
+				<button class="button settings-menu-toggle"><i class="fa fa-gear"></i></button>
+				<h2 class="section-title"><i class="fa fa-gear"></i> Settings</h2>
+				<div class="settings-section operands">
+					<h3 class="section-sub-title">Problem Types</h3>
+					<ul class="settings-list input-list button-list-grid validate types">
+						<li class="settings-list-item button-grid-item">
+							<input class="operand-input operand-addition button-grid-input js-settings-input js-settings-operand" type="checkbox" id="operandAddition" value="addition" checked>
+							<label class="operand-label button" for="operandAddition">+</label>
+						</li><li class="settings-list-item button-grid-item">
+							<input class="operand-input operand-subtraction button-grid-input js-settings-input js-settings-operand" type="checkbox" id="operandSubtraction">
+							<label class="operand-label button" for="operandSubtraction">&minus;</label>
+						</li>
+						<!--
+						<li class="settings-list-item button-grid-item">
+							<input class="operand-input operand-multiplication button-grid-input js-settings-input js-settings-operand" type="checkbox" id="operandMultiplication">
+							<label class="operand-label button" for="operandMultiplication">x</label>
+						</li><li class="settings-list-item button-grid-item">
+							<input class="operand-input operand-division button-grid-input js-settings-input js-settings-operand" type="checkbox" id="operandAdditionDivision">
+							<label class="operand-label button" for="operandAdditionDivision">&frasl;</label>
+						</li>
+						-->
+					</ul>
+					<div class="error-message">
+						<span>You must select at least one Problem Type</span>
+					</div>
+				</div>
+				<div class="settings-section numbers">
+					<h3 class="section-sub-title">Numbers</h3>
+					<ul class="settings-list radio-section">
+						<li class="settings-list-item validate minmax">
+							<input class="js-setnumbers radio-section-input" type="radio" value="" name="setnumbers" id="setNumMinMax" checked>
+							<label class="settings-sub-subtitle button radio-section-label" for="setNumMinMax">by Min/Max Numbers</label>
+							<div class="settings-sublist-item radio-section-item">
+								<label for="smNumSize">Smallest Number</label>
+								<input class="js-setnumber js-numsize radio-section-item-input" type="number" value="0" min="0" id="smNumSize">
+							</div>
+							<div class="settings-sublist-item radio-section-item">
+								<label for="lgNumSize">Largest Number</label>
+								<input class="js-setnumber js-numsize radio-section-item-input" type="number" value="9" min="0" id="lgNumSize">
+							</div>
+							<div class="error-message">
+								<span>Smallest Number must be smaller than Largest Number</span>
+							</div>
+						</li>
+						<li class="settings-list-item maxamt">
+							<input class="js-setnumbers radio-section-input" type="radio" value="" name="setnumbers" id="setNumAnsTotal">
+							<label class="settings-sub-subtitle button radio-section-label" for="setNumAnsTotal">by Answer Total</label>
+							<div class="settings-sublist-item radio-section-item">
+								<label for="totMaxAmt">Total Max Amount</label>
+								<input class="js-setnumber js-totmaxamt radio-section-item-input" type="number" value="20" min="0" id="totMaxAmt" disabled>
+							</div>
+						</li>
+					</ul>
+				</div>
+				<div class="settings-section probstyle">
+					<h3 class="section-sub-title">Style</h3>
+					<ul class="settings-list input-list input-radio button-list-grid">
+						<li class="settings-list-item button-grid-item">
+							<input class="probstyle-input probstyle-vertical js-probstyle-input button-grid-input" type="radio" id="probstyleVertical" name="probstyle" value="vertical" checked>
+							<label class="probstyle-label button" for="probstyleVertical"><i class="fa fa-arrows-v"></i><span class="hide">Vertical</span></label>
+						</li><li class="settings-list-item button-grid-item">
+							<input class="probstyle-input probstyle-horizontal js-probstyle-input button-grid-input" type="radio" id="probstyleHorizontal" name="probstyle" value="horizontal">
+							<label class="probstyle-label button" for="probstyleHorizontal"><i class="fa fa-arrows-h"></i><span class="hide">Horizontal</span></label>
+						</li>
+					</ul>
+				</div>
+				<hr/>
+				<div class="settings-section submit-section">
+					<button class="button settings-submit js-settings-submit"><i class="fa fa-play"></i> Apply</button>
+					<button class="button settings-reset js-settings-reset"><i class="fa fa-undo"></i> Reset</button>
+				</div>
+			</section>
+
+			<section id="pageUI" class="mainColumn mainSection">
+				<div class="button-list">
+					<button class="button-list-item button js-checkanswers"><i class="fa fa-check"></i> Check My Answers</button>
+					<button class="button-list-item button js-clearanswers"><i class="fa fa-eraser"></i> Clear My Answers</button>
+					
+					<span class="button-list-item inline-input">
+						<label for="max-count" class="text-small" style="">Total problems: </label>
+						<input name="max-count" class="input input-simple js-max-count" type="number" placeholder="Enter Number of Problems...">
+						<button class="button-list-item button js-regenerate"><i class="fa fa-refresh"></i> Create New Questions</button>
+					</span>
+				</div>
+			</section> 
+			<hr class="mainColumn" />
+
+			<section id="pagecontent" class="mainColumn mainSection">
+				<form id="MathSentences" name="MathSentences">
+					<ul class="problems js-problems problems-vertical"></ul>
+				</form>
+			</section>
+
+			<br/>
+			<hr/>
+			<footer>
+				<div class="footer-col">&copy;<script>document.write(new Date().getFullYear());</script> IEatPaint Studio&trade;</div>
+				<div class="footer-col">Got suggestions or comments?  Go to the <a href="https://github.com/jasonhale/math-practice/issues">Issues page</a> and leave a note. Thanks!</div>
+			</footer>
+		</div><!-- end #siteWrap -->
+
+		<div class="modal js-modal" style="display:none;">
+			<div class="modal-overlay js-modal-overlay" style="display:none;"></div>
+			<div class="modal-box modal-answer js-modal-box js-modal-answers" style="display:none;">
+				<h2>Totals!</h2>
+				<p>
+					<span class="answer-label">Total answered: </span><span class="answer-total total-answered"></span><br/>
+					<span class="answer-label">Total correct: </span><span class="answer-total total-correct"></span><br/>
+					<span class="answer-label">Total incorrect: </span><span class="answer-total total-incorrect"></span>
+				</p>
+				<p>
+					<button class="button modal-continue js-modal-continue">&raquo; CONTINUE &laquo;</button>
+				</p>
+			</div>
+		</div>
+
+
+
+
+
+		<div style="display:none;">
+			<li class="prob template" data-index="" data-problemtype="">
+				<label class="question" for="">
+					<span class="num-a"></span>
+					<span class="operator">+</span>
+					<span class="num-b"></span>
+					<span class="equals">=</span>
+				</label>
+				<input id="" class="answer" type="text" form="MathSentences">
+			</li>
+		</div>
+		<script type="text/javascript" src="js/modernizr-custom.js"></script>
+		<script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
+		<script type="text/javascript" src="js/main.js"></script>
+		<script type="text/javascript" src="js/cornify.js"></script>
+	</body>
+</html>

@@ -66,6 +66,7 @@ var mt = {
 		$('.js-modal, .js-modal-overlay, .js-modal-box').hide();
 	},
 	buildProbs : function(total){
+		window.problist = [];
 		// create and show problem.  Loops as many times as the current problem count is set.
 
 		// more than one type of problem?  If so, set a global setting and store a local array of only those problem types that are chosen/set.
@@ -114,6 +115,15 @@ var mt = {
 					answer = numA / numB;
 					break;
 			}
+
+			window.problist.push({
+				id: i,
+				numA: numA,
+				numB: numB,
+				oper: mt.problemtypes[probtype],
+				answer: answer,
+				probtype: probtype
+			});
 
 			var template = $('.prob.template').clone();
 			$(template).removeClass('template');
