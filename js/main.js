@@ -118,7 +118,7 @@ var mt = {
 			var template = $('.prob.template').clone();
 			$(template).removeClass('template');
 			$(template).attr({
-				'data-index' : ''+i+1,
+				'data-index' : i+1,
 				'data-problemtype' : probtype
 			});
 			$(template).find('.question').attr({
