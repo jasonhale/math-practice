@@ -61,8 +61,10 @@ label, button, input, .button {
 	cursor:pointer;
 }
 #siteWrap {
-	height:100%;
-	position:relative;
+	height: 100vh;
+	height: 100%;
+	position: relative;
+	overflow: hidden;
 }
 .hide { display:none !important; }
 
@@ -122,6 +124,18 @@ label, button, input, .button {
 }
 .submit-simple {
 
+}
+
+footer {
+	clear: both;
+	overflow: hidden;
+}
+.footer-col {
+	float: left;
+
+	& + & {
+		float: right;
+	}
 }
 
 #pageUI {
@@ -214,19 +228,26 @@ label, button, input, .button {
 	SETTINGS
 */
 .settings {
-	width:300px;// height: 100%;
-	margin:0; padding: 1em;
+	width: 0; // height: 100%;
+	margin:0; padding: 0;
 	color:white;
 	text-shadow: 1px 1px 1px rgba(0,0,0,.5);
 	background-color:#808080;
-	position:absolute; top:0; bottom: 0; right:-300px; z-index: @z-top;
-	//-webkit-transition: position 2s ease;
-	transition: margin 1s ease;
+	position:absolute; top:0; bottom: 0; right:0; z-index: @z-top;
+	transition: width .5s ease-out;
 
 	&.open {
 		//right:0px;
-		margin-right:300px;
+		// margin-right:300px;
+		width: 300px;
 		box-shadow: 0 0 20px rgba(0,0,0,.6);
+	}
+	
+	&-container {
+		width: 300px;
+		height: 100%;
+		padding: 1em;
+		overflow-y: auto;
 	}
 
 	.settings-menu-toggle {
