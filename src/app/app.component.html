@@ -1,20 +1,47 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
-  <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
-</div>
-<h2>Here are some links to help you start: </h2>
-<ul>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://github.com/angular/angular-cli/wiki">CLI Documentation</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-  </li>
-</ul>
+<div id="siteWrap" class="site-wrap">
+  <header class="mainColumn mainSection">
+    <h1>Math Practice Time</h1>
+  </header>
 
+  <app-settings></app-settings>
+
+  <section id="pageUI" class="mainColumn mainSection">
+    <div class="button-list">
+      <button class="button-list-item button js-checkanswers"><i class="fa fa-check"></i> Check My Answers</button>
+      <button class="button-list-item button js-clearanswers"><i class="fa fa-eraser"></i> Clear My Answers</button>
+
+      <span class="button-list-item inline-input">
+        <label for="max-count" class="text-small" style="">Total problems: </label>
+        <input name="max-count" class="input input-simple js-max-count" type="number" placeholder="Enter Number of Problems...">
+        <button class="button-list-item button js-regenerate"><i class="fa fa-refresh"></i> Create New Questions</button>
+      </span>
+    </div>
+  </section>
+  <hr class="mainColumn" />
+
+  <section id="pagecontent" class="mainColumn mainSection">
+    <form *ngIf="probs.length > 0" id="MathSentences" name="MathSentences">
+      <ul class="problems js-problems problems-vertical">
+
+        <app-problem
+          *ngFor="let prob of probs; index as i;"
+          probId="prob.probId"
+          numA="prob.numA"
+          numB="prob.numB"
+          operand="prob.operand"
+          index="i"
+        ></app-problem>
+
+      </ul>
+    </form>
+  </section>
+
+  <br/>
+  <hr/>
+  <footer>
+    <div class="footer-col">&copy;<script>document.write(new Date().getFullYear());</script> IEatPaint Studio&trade;</div>
+    <div class="footer-col">Got suggestions or comments?  Go to the <a href="https://github.com/jasonhale/math-practice/issues">Issues page</a> and leave a note. Thanks!</div>
+  </footer>
+</div><!-- end #siteWrap -->
+
+<app-answermodal *ngIf="showModal"></app-answermodal>
