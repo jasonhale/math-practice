@@ -43,14 +43,14 @@ class App extends Component {
   }
 
   toggleAnswersModal = () => {
-    this.setState({ 'answersOpen': !this.state.answersOpen});
+    this.setState( prevState => ({ 'answersOpen' : !prevState.answersOpen }));
   }
 
   updateCount = (event) => {
     const settingsToSave = {
-      'operations': Object.assign({}, this.state.operations),
+      'operations': {...this.state.operations},
       'count': parseInt(event.target.value, 10),
-      'operands': Object.assign({}, this.state.operands),
+      'operands': {...this.state.operands},
       'probStyle': this.state.probStyle
     }
     this.saveSettings(settingsToSave);
@@ -58,22 +58,25 @@ class App extends Component {
   }
 
   updateSettings = (settings) => {
+    const {operations, count, operands, probStyle} = settings;
     this.saveSettings(settings);
     this.setState({
-      'operations': settings.operations,
-      'count': settings.count,
-      'operands': settings.operands,
-      'probStyle': settings.probStyle
+      'operations': operations,
+      'count': count,
+      'operands': operands,
+      'probStyle': probStyle
     });
   }
 
   saveSettings = (settings) => {
     console.log('saving...');
+    // TODO : message savinge
+    const {operations, count, operands, probStyle} = settings;
     let settingsToSave = {
-      'operations': settings.operations,
-      'count': settings.count,
-      'operands': settings.operands,
-      'probStyle': settings.probStyle
+      'operations': operations,
+      'count': count,
+      'operands': operands,
+      'probStyle': probStyle
     };
     // if settings are saved, delete them, then save.
     if(localStorage.getItem('mathpractice')){
