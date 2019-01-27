@@ -2,20 +2,17 @@ import React from 'react';
 import {operandSymbols} from '../tools/utils';
 
 class SettingsUI extends React.Component {
-  constructor(props){
-    super(props);
 
-    this.state = {
-      'settingsOpen': false,
-			'settingsUpdated': false,
-			'currentSettings': {
-				'operations':  props.operations,
-				'count': props.count,
-				'operands': props.operands,
-				'probStyle': props.probStyle
-			}
+	state = {
+		'settingsOpen': false,
+		'settingsUpdated': false,
+		'currentSettings': {
+			'operations':  this.props.operations,
+			'count': this.props.count,
+			'operands': this.props.operands,
+			'probStyle': this.props.probStyle
 		}
-  }
+	}
 
 	initialSettings = {
 		'operations': this.props.operations,
@@ -96,7 +93,7 @@ class SettingsUI extends React.Component {
 
   render(){
     return(
-      <section id="settingsUI" className={'settings mainColumn mainSection' + ((this.state.settingsOpen)? ' open' : '')}>
+      <section id="settingsUI" className={`settings mainColumn mainSection ${((this.state.settingsOpen)? ' open' : '')}`} >
 
 				<button className="button settings-menu-toggle" onClick={this.toggleSettings}><i className="fa fa-gear"></i></button>
 

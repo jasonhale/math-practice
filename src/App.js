@@ -1,24 +1,23 @@
 import React, { Component } from 'react';
 import './css/App.css';
 import './css/styles.css';
+import Header from './components/Header';
 import SettingsUI from './components/SettingsUI';
 import Problem from './components/Problem.js';
 import Modal from './components/Modal.js';
 import {generateProblems} from './tools/utils.js';
+import { setSettings } from './tools/api';
 
 class App extends Component {
-  constructor(props){
-    super(props);
 
-    this.state = {
-      isProblemsGenerated: false,
-      problems: [],
-      answersOpen: false,
-      operations: this.props.operations,
-      count: this.props.count,
-      operands: this.props.operands,
-      probStyle: this.props.probStyle
-    }
+  state = {
+    isProblemsGenerated: false,
+    problems: [],
+    answersOpen: false,
+    operations: this.props.operations,
+    count: this.props.count,
+    operands: this.props.operands,
+    probStyle: this.props.probStyle
   }
 
   componentWillMount(){
@@ -78,12 +77,8 @@ class App extends Component {
       'operands': operands,
       'probStyle': probStyle
     };
-    // if settings are saved, delete them, then save.
-    if(localStorage.getItem('mathpractice')){
-      localStorage.removeItem('mathpractice');
-    }
-    localStorage.setItem('mathpractice', JSON.stringify(settingsToSave));
-    console.log('...saved.');
+
+    setSettings(JSON.stringify(settingsToSave));
   }
 
   render() {
@@ -91,8 +86,6 @@ class App extends Component {
 
     return (
       <div id="siteWrap" className="site-wrap">
-        <header className="mainColumn mainSection"><h1>Math Practice Time</h1></header>
-
         <SettingsUI
           operations={this.state.operations}
           count={this.state.count}
@@ -101,20 +94,14 @@ class App extends Component {
           onSave={this.updateSettings}
         />
 
-        <section id="pageUI" className="mainColumn mainSection">
-          <div className="button-list">
+        <Header
+          checkAnswers={this.checkAnswers}
+          clearAnswers={this.clearAnswers}
+          resetProblems={this.resetProblems}
+          count={this.state.count}
+          updateCount={this.updateCount}
+        />
 
-            <button className="button-list-item button checkanswers" onClick={this.checkAnswers}><i className="fa fa-check"/> Check My Answers</button>
-            <button className="button-list-item button clearanswers" onClick={this.clearAnswers}><i className="fa fa-eraser"/> Clear My Answers</button>
-            
-            <label htmlFor="max-count" className="text-small button-list-item inline-input">Total problems: <input name="max-count" className="input input-simple js-max-count" type="number" placeholder="Enter Number of Problems..." value={this.state.count} onChange={this.updateCount}/></label>
-            
-            <button className="button-list-item button js-regenerate" onClick={this.resetProblems}>
-              <i className="fa fa-refresh"/> Create New Questions
-            </button>
-
-          </div>
-        </section>
         <hr className="mainColumn" />
 
         <section id="pagecontent" className="mainColumn mainSection">

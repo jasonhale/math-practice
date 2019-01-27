@@ -26,7 +26,7 @@
 //       answer: 0
 //     }
 
-const operandSymbols = {
+export const operandSymbols = {
   'addition': '+',
   'subtraction': '-',
   'multiplication': 'x',
@@ -109,4 +109,4 @@ export function generateProblems(operations, count, operands) {
   return equations;
 };
 
-export {operandSymbols};
+export default null;
