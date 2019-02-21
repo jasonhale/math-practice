@@ -97,7 +97,8 @@ export function generateProblems(operations, count, operands) {
         'numA': numA,
         'numB': numB,
         'operator': operator,
-        'answer': answer
+        'answer': answer,
+        'input': ''
       });
     };
   }

@@ -2,8 +2,10 @@ import React, { Component } from 'react';
 import './css/App.css';
 import './css/styles.css';
 import SettingsUI from './components/SettingsUI';
-import Problem from './components/Problem.js';
-import Modal from './components/Modal.js';
+import Problem from './components/Problem';
+import Modal from './components/Modal';
+import Header from './components/Header';
+import Footer from './components/Footer';
 import {generateProblems} from './tools/utils.js';
 
 class App extends Component {
@@ -17,7 +19,13 @@ class App extends Component {
       operations: this.props.operations,
       count: this.props.count,
       operands: this.props.operands,
-      probStyle: this.props.probStyle
+      probStyle: this.props.probStyle,
+      reveal: false,
+      answers: {
+        totalAnswered: 0,
+        totalCorrect: 0,
+        totalIncorrect: 0
+      }
     }
   }
 
@@ -34,12 +42,35 @@ class App extends Component {
   }
 
   checkAnswers = () => {
-    console.log('Check answers...');
+    let totalAnswered = 0, totalCorrect = 0, totalIncorrect = 0;
+    this.state.problems.forEach((p) => {
+      const inp = parseInt(p.input, 10);
+      if (inp && inp !== 0) {
+        totalAnswered += 1;
+        if (p.answer === parseInt(p.input, 10)) totalCorrect += 1;
+          else totalIncorrect += 1;
+      }
+    });
+    this.setState({
+      reveal: true,
+      answers: {
+        totalAnswered,
+        totalCorrect,
+        totalIncorrect
+      }
+    });
     this.toggleAnswersModal();
   }
 
   clearAnswers = () => {
-    console.log('Clear answers...');
+    const resetProbs = this.state.problems.map(p => {
+      p.input = '';
+      return p;
+    });
+    this.setState({
+      problems: resetProbs,
+      reveal: false
+    });
   }
 
   toggleAnswersModal = () => {
@@ -86,12 +117,17 @@ class App extends Component {
     console.log('...saved.');
   }
 
+  onChange = (idx, val) => {
+    const problems = [ ...this.state.problems ];
+    problems[idx].input = val;
+    console.log(`idx: ${idx} || val: ${val}`);
+    this.setState({ problems });
+  };
+
   render() {
-    const Y = new Date().getFullYear(); // for current year in footer for copyright declaration.
 
     return (
       <div id="siteWrap" className="site-wrap">
-        <header className="mainColumn mainSection"><h1>Math Practice Time</h1></header>
 
         <SettingsUI
           operations={this.state.operations}
@@ -101,51 +137,47 @@ class App extends Component {
           onSave={this.updateSettings}
         />
 
-        <section id="pageUI" className="mainColumn mainSection">
-          <div className="button-list">
+        <Header
+          checkAnswers={this.checkAnswers}
+          clearAnswers={this.clearAnswers}
+          resetProblems={this.resetProblems}
+          count={this.state.count}
+          updateCount={this.updateCount}
+        />
 
-            <button className="button-list-item button checkanswers" onClick={this.checkAnswers}><i className="fa fa-check"/> Check My Answers</button>
-            <button className="button-list-item button clearanswers" onClick={this.clearAnswers}><i className="fa fa-eraser"/> Clear My Answers</button>
-            
-            <label htmlFor="max-count" className="text-small button-list-item inline-input">Total problems: <input name="max-count" className="input input-simple js-max-count" type="number" placeholder="Enter Number of Problems..." value={this.state.count} onChange={this.updateCount}/></label>
-            
-            <button className="button-list-item button js-regenerate" onClick={this.resetProblems}>
-              <i className="fa fa-refresh"/> Create New Questions
-            </button>
-
-          </div>
-        </section>
         <hr className="mainColumn" />
 
-        <section id="pagecontent" className="mainColumn mainSection">
-          <form id="MathSentences" name="MathSentences">
-            <ul className={`problems js-problems problems-${this.state.probStyle}`}>
-              {
-                this.state.problems.map((problem, i) => {
-                  return (
-                    <Problem
-                      key={`problem${i}`}
-                      index={i}
-                      name={`problem${i}`}
-                      operator={problem.operator}
-                      numA={problem.numA}
-                      numB={problem.numB}
-                      answer={problem.answer}
-                    />
-                  )
-                })
-              }
-            </ul>
-          </form>
-        </section>
+        <main className="mainColumn mainSection">
+          <ul className={`problems problems--${this.state.probStyle} ${this.state.reveal && 'problems--reveal'}`}>
+            {
+              this.state.problems.map((problem, i) => 
+                (
+                  <Problem
+                    key={`problem${i}`}
+                    index={i}
+                    name={`problem${i}`}
+                    operator={problem.operator}
+                    numA={problem.numA}
+                    numB={problem.numB}
+                    answer={problem.answer}
+                    input={problem.input}
+                    onChange={this.onChange}
+                  />
+                )
+              )
+            }
+          </ul>
+        </main>
         
+        <Footer />
 
-        <br/>
-        <hr/>
-        <footer>&copy;{Y} IEatPaint Studio&trade;</footer>
-
-        <Modal show={this.state.answersOpen} toggle={this.toggleAnswersModal}/>
-
+        <Modal
+          show={this.state.answersOpen}
+          toggle={this.toggleAnswersModal}
+          totalAnswered={this.state.answers.totalAnswered}
+          totalCorrect={this.state.answers.totalCorrect}
+          totalIncorrect={this.state.answers.totalIncorrect}
+        />
       </div>
     );
   }
