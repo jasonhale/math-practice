@@ -4,10 +4,12 @@
   "homepage": "https://jasonhale.github.io/math-practice/react",
   "private": true,
   "devDependencies": {
+    "eslint-plugin-react-hooks": "^1.0.2",
     "gh-pages": "^2.0.1",
     "react-scripts": "^2.0.4"
   },
   "dependencies": {
+    "lodash.isequal": "^4.5.0",
     "react": "^16.8.2",
     "react-dom": "^16.8.2"
   },
