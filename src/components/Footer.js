@@ -1,4 +1,5 @@
 import React from 'react';
+import './Footer.css';
 
 export default function Footer() {
   const Y = new Date().getFullYear(); // for current year in footer for copyright declaration.

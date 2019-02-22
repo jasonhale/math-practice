@@ -1,4 +1,5 @@
 import React from 'react';
+import './Problem.css';
 
 function Problem({ name, operator, numA, numB, answer, index, input, onChange }) {
 	const inputChange = (e) => onChange(index, e.target.value);
@@ -9,7 +10,12 @@ function Problem({ name, operator, numA, numB, answer, index, input, onChange })
 		status = isCorrect ? 'prob--correct' : 'prob-incorrect';
 	}
 	return (
-		<li className={`prob ${status}`} data-index={index} data-problemtype="addition" data-answer={answer}>
+		<li
+			className={`prob ${status}`}
+			// data-index={index}
+			// data-problemtype="addition"
+			// data-answer={answer}
+		>
 			<label className="question" htmlFor={name}>
 				<span className="num-a">{numA}</span>
 				<span className="operator">{operator}</span>

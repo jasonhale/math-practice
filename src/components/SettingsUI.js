@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import isEqual from 'lodash.isequal';
 import {operandSymbols} from '../tools/utils';
+import './SettingsUI.css';
 
 function SettingsUI({operations, count, operands, probStyle, onSave}) {
 	let initialSettings = {

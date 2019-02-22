@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import './css/App.css';
-import './css/styles.css';
+import './App.css';
 import SettingsUI from './components/SettingsUI';
 import Problem from './components/Problem';
 import Modal from './components/Modal';
