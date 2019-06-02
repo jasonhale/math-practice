@@ -1,0 +1,52 @@
+/* Modal popup */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 100;
+}
+.modal.open {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.modal-overlay {
+  background: none rgba(0, 0, 0, 0.7);
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 100;
+
+  opacity: 0;
+  transition: opacity 1s;
+  will-change: contents;
+}
+.modal-box {
+  width: 50%;
+  min-width: 300px;
+  background-color: white;
+  text-align: center;
+  border-radius: 1em;
+  box-shadow: 5px 5px 10px black;
+  position: relative;
+  z-index: 101;
+
+  opacity: 0;
+  transition: opacity 1s;
+}
+.modal-overlay,
+.modal-box {
+  
+}
+.modal.open .modal-overlay,
+.modal.open .modal-box {
+  opacity: 1;
+}
+.modal-answer .answer-total {
+  font-weight: bold;
+}

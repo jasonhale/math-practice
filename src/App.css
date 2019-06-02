@@ -1,0 +1,68 @@
+@import './css/base.css';
+
+#siteWrap {
+  height: 100%;
+  position: relative;
+}
+.hide {
+  display: none !important;
+}
+.mainColumn {
+  width: 90%;
+  max-width: 52rem;
+  margin: 0 auto;
+}
+.mainSection {
+  margin-bottom: 1em;
+}
+.section-title {
+  margin-top: .2em;
+  margin-bottom: .5em;
+}
+.section-sub-title {
+  margin-top: .2em;
+  margin-bottom: .5em;
+  line-height: 1;
+}
+.settings-section {
+  margin: 0 0 1em;
+}
+
+.text-small {
+  font-size: .6rem;
+}
+.inline-input {
+  padding: 0 .5rem;
+  border-radius: .3em;
+}
+.input-simple {
+  max-width: 3rem;
+}
+.input-simple::-webkit-inner-spin-button, 
+.input-simple::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+#pageUI .inline-input .text-small {
+  font-weight: bold;
+}
+
+.button-list {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+}
+  .button-list-item {
+    display: inline-block;
+  }
+  .button-list-item.button,
+  .button-list-item .input {
+    line-height: 1rem;
+  }
+  /*.button-list label {
+    text-align: right;
+  }
+  .button-list label + input {
+    text-align: left;
+  }*/

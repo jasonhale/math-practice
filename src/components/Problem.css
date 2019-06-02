@@ -1,0 +1,65 @@
+
+.problems {
+  margin: 0;
+  padding: 0 0 5rem;
+  list-style: none outside none;
+}
+.prob {
+  display: inline-block;
+  min-width: 2rem;
+  width: 6%;
+  margin: 1rem 1.9%;
+  padding: 0;
+  font-weight: bold;
+  overflow: hidden;
+}
+.question {
+  display: block;
+}
+.question span {
+  display: inline-block;
+}
+.question .num-a,
+.question .num-b {
+  display: block;
+  text-align: right;
+}
+.question .operator {
+  position: absolute;
+}
+.question .equals {
+  display: block;
+  text-indent: -9999px;
+  height: 0;
+  border-bottom: solid 1px;
+}
+.answer {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: .2em 0;
+  font-size: 1em;
+  text-align: right;
+  border: 0 none;
+}
+.answer[data-solve*='0'],
+.answer[data-solve*='1'],
+.answer[data-solve*='2'],
+.answer[data-solve*='3'],
+.answer[data-solve*='4'],
+.answer[data-solve*='5'],
+.answer[data-solve*='6'],
+.answer[data-solve*='7'],
+.answer[data-solve*='8'],
+.answer[data-solve*='9'] {
+  background-color: rgba(0, 170, 255, 0.1);
+}
+.answer.correct {
+  background-color: rgba(0, 255, 0, 0.3);
+}
+.answer.incorrect {
+  background-color: rgba(255, 0, 0, 0.3);
+}
+.answer.incorrect-fixed {
+  background-color: rgba(255, 255, 0, 0.5);
+}

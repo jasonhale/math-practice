@@ -1,10 +1,13 @@
 import React from 'react';
+import './Header.css';
 
-function Header ({ checkAnswers, clearAnswers, resetProblems, count, updateCount }) {
+export default function Header({ checkAnswers, clearAnswers, resetProblems, count, updateCount }) {
+
   return (
     <header className="mainColumn mainSection">
       <h1>Math Practice Time</h1>
-
+    
+        
       <section id="pageUI" className="">
         <div className="button-list">
 
@@ -23,5 +26,3 @@ function Header ({ checkAnswers, clearAnswers, resetProblems, count, updateCount
     </header>
   );
 }
-
-export default Header;

@@ -1,251 +1,241 @@
-import React from 'react';
+import React, { useState } from 'react';
+import isEqual from 'lodash.isequal';
 import {operandSymbols} from '../tools/utils';
+import './SettingsUI.css';
 
-class SettingsUI extends React.Component {
-
-	state = {
-		'settingsOpen': false,
-		'settingsUpdated': false,
-		'currentSettings': {
-			'operations':  this.props.operations,
-			'count': this.props.count,
-			'operands': this.props.operands,
-			'probStyle': this.props.probStyle
-		}
-	}
-
-	initialSettings = {
-		'operations': this.props.operations,
-		'count': this.props.count,
-		'operands': this.props.operands,
-		'probStyle': this.props.probStyle
+function SettingsUI({operations, count, operands, probStyle, onSave}) {
+	let initialSettings = {
+		operations: { ...operations },
+		count: count,
+		operands: { ...operands },
+		probStyle: probStyle
 	};
 
-  toggleSettings = () => {
-    this.setState({ 'settingsOpen': (!this.state.settingsOpen) });
-  }
+	const [settingsOpen, setSettingsOpen] = useState(false);
+	const [settingsUpdated, setSettingsUpdated] = useState(false);
+	const [currentSettings, setCurrentSettings] = useState({ ...initialSettings });
+
+  const toggleSettings = () => setSettingsOpen(!settingsOpen);
 
 	// Determine if a change for the type of operations to use.
-	setOperation = (op, cs) => {
+	const setOperation = (op, cs) => {
 		// toggle the operation being set.
-		let copySettings = Object.assign({}, cs);
+		let copySettings = { ...cs };
 		copySettings.operations[op] = !copySettings.operations[op];
 		// update currentSettings;
-		this.setState({
-			'currentSettings': copySettings,
-			'settingsUpdated': true
-		});
-		this.checkState();
+		// setSettingsUpdated(true); // <-- duplicate?
+		setCurrentSettings(copySettings);
+		checkState();
 	}
 
-	checkState = () => {
-		this.setState({
-			'settingsUpdated': (this.state.currentSettings !== this.initialSettings)
-		});
+	const checkState = () => {
+		const equal = isEqual(currentSettings, initialSettings);
+		console.log('currentSettings: %o\n initialSettings: %o', currentSettings, initialSettings);
+		console.log('isEqual: ', equal);
+		setSettingsUpdated(!equal);
 	}
 
-	setOperand = (op, cs) => {
-		let copySettings = Object.assign({}, this.state.currentSettings);
+	const setOperand = (op, cs) => {
+		let copySettings = { ...currentSettings };
 		copySettings.operands.setBy = op;
-		this.setState({'currentSettings' : copySettings});
-		this.checkState();
+		setCurrentSettings(copySettings);
+		checkState();
 	}
 
-	setByMinChange = (event) => {
-		let copySettings = Object.assign({}, this.state.currentSettings);
+	const setByMinChange = (event) => {
+		let copySettings = { ...currentSettings };
 		const value = event.target.value ? event.target.value : 0;
 		copySettings.operands.min = parseInt(value, 10);
-		this.setState({'currentSettings': copySettings});
-		this.checkState();
+		setCurrentSettings(copySettings);
+		checkState();
 	}
 
-	setByMaxChange = (event) => {
-		let copySettings = Object.assign({}, this.state.currentSettings);
+	const setByMaxChange = (event) => {
+		let copySettings = { ...currentSettings };
 		const value = event.target.value ? event.target.value : 0;
 		copySettings.operands.max = parseInt(value, 10);
-		this.setState({'currentSettings':copySettings});
-		this.checkState();
+		setCurrentSettings(copySettings);
+		checkState();
 	}
 
-	setStyle = (probStyle, currentSettings) => {
-		let copySettings = Object.assign({}, this.state.currentSettings);
+	const setStyle = (probStyle) => {
+		let copySettings = { ...currentSettings };
 		copySettings.probStyle = probStyle;
-		this.setState({'currentSettings': copySettings});
-		this.checkState();
+		setCurrentSettings(copySettings);
+		checkState();
 	}
 
-	applySettings = () => {
-		this.initialSettings = this.state.currentSettings;
-		this.props.onSave(this.state.currentSettings);
-		this.setState({settingsUpdated: false});
+	const applySettings = () => {
+		initialSettings = { ...currentSettings };
+		onSave(currentSettings);
+		setSettingsUpdated(false);
 	};
 
-	resetSettings = () => {
-		console.log('*** reset ***\n currentSettings: ' + JSON.stringify(this.state.currentSettings) + '\n initialSettings: ' + JSON.stringify(this.initialSettings) + '\n ... these are the same? ::'+ (JSON.stringify(this.state.currentSettings) === JSON.stringify(this.initialSettings)) + '::');
-		console.log(this.state.currentSettings);
-		console.log(this.initialSettings);
-				
-		this.setState({
-			'currentSettings': this.initialSettings,
-			'settingsUpdated': false
-		});
+	const resetSettings = () => {
+		console.log(
+`*** reset ***
+currentSettings: %o
+initialSettings: %o
+... these are the same? ::${isEqual(currentSettings, initialSettings)}::
+`, currentSettings, initialSettings);
+		
+		setCurrentSettings(initialSettings);
+		setSettingsUpdated(false);
 	}
 
-  render(){
-    return(
-      <section id="settingsUI" className={`settings mainColumn mainSection ${((this.state.settingsOpen)? ' open' : '')}`} >
+	return(
+		<section id="settingsUI" className={`settings mainColumn mainSection ${((settingsOpen)? 'open' : '')}`}>
 
-				<button className="button settings-menu-toggle" onClick={this.toggleSettings}><i className="fa fa-gear"></i></button>
+			<button className="button settings-menu-toggle" onClick={toggleSettings}><i className="fa fa-gear"></i></button>
 
-				<h2 className="section-title"><i className="fa fa-gear"></i> Settings</h2>
+			<h2 className="section-title"><i className="fa fa-gear"></i> Settings</h2>
 
-				<div className="settings-section operands">
-					<h3 className="section-sub-title">Problem Types</h3>
+			<div className="settings-section operands">
+				<h3 className="section-sub-title">Problem Types</h3>
 
-					<ul className="settings-list input-list button-list-grid validate types">
-						<OperationSelector
-							operation="addition"
-							currentSettings={this.state.currentSettings}
-							clickAction={this.setOperation}
-						/>
+				<ul className="settings-list input-list button-list-grid validate types">
+					<OperationSelector
+						operation="addition"
+						currentSettings={currentSettings}
+						clickAction={setOperation}
+					/>
 
-            <OperationSelector
-							operation="subtraction"
-							currentSettings={this.state.currentSettings}
-							clickAction={this.setOperation}
-						/>
-						
-						{/*
-						<OperationSelector
-							operation="multiplication"
-							currentSettings={this.currentSettings}
-							clickAction={this.setOperation}
-						/>
+					<OperationSelector
+						operation="subtraction"
+						currentSettings={currentSettings}
+						clickAction={setOperation}
+					/>
+					
+					{/*
+					<OperationSelector
+						operation="multiplication"
+						currentSettings={this.currentSettings}
+						clickAction={this.setOperation}
+					/>
 
-            <OperationSelector
-							operation="division"
-							currentSettings={this.currentSettings}
-							clickAction={this.setOperation}
-						/>
-						*/}
-					</ul>
+					<OperationSelector
+						operation="division"
+						currentSettings={this.currentSettings}
+						clickAction={this.setOperation}
+					/>
+					*/}
+				</ul>
 
-					<div className="error-message">
-						<span>You must select at least one Problem Type</span>
-					</div>
-
+				<div className="error-message">
+					<span>You must select at least one Problem Type</span>
 				</div>
 
-        <div className="settings-section numbers">
-					<h3 className="section-sub-title">Numbers</h3>
+			</div>
 
-					<ul className="settings-list radio-section">
-						<li className="settings-list-item validate minmax">
+			<div className="settings-section numbers">
+				<h3 className="section-sub-title">Numbers</h3>
 
-							<SetBySelector
-								operand="minmax"
-								currentSettings={this.state.currentSettings}
-								text="by Min/Max Numbers"
-								clickAction={this.setOperand}
+				<ul className="settings-list radio-section">
+					<li className="settings-list-item validate minmax">
+
+						<SetBySelector
+							operand="minmax"
+							currentSettings={currentSettings}
+							text="by Min/Max Numbers"
+							clickAction={setOperand}
+						/>
+
+						<div className="settings-sublist-item radio-section-item">
+							<label htmlFor="smNumSize">Smallest Number</label>
+							<input
+								className="radio-section-item-input"
+								type="number"
+								min="0"
+								value={currentSettings.operands.min}
+								id="smNumSize"
+								onChange={setByMinChange}
+								disabled={(currentSettings.operands.setBy !== 'minmax')}
 							/>
+						</div>
 
-							<div className="settings-sublist-item radio-section-item">
-								<label htmlFor="smNumSize">Smallest Number</label>
-								<input
-									className="radio-section-item-input"
-									type="number"
-									min="0"
-									value={this.state.currentSettings.operands.min}
-									id="smNumSize"
-									onChange={this.setByMinChange}
-									disabled={(this.state.currentSettings.operands.setBy !== 'minmax')}
-								/>
-							</div>
-
-							<div className="settings-sublist-item radio-section-item">
-								<label htmlFor="lgNumSize">Largest Number</label>
-								<input
-									className="radio-section-item-input"
-									type="number"
-									value={this.state.currentSettings.operands.max}
-									min="0"
-									id="lgNumSize"
-									onChange={this.setByMaxChange}
-									disabled={(this.state.currentSettings.operands.setBy !== 'minmax')}
-								/>
-							</div>
-
-							<div className="error-message">
-								<span>Smallest Number must be smaller than Largest Number</span>
-							</div>
-						</li>
-
-						{/*
-						<li className="settings-list-item maxamt">
-							<SetBySelector
-								operand="minmax"
-								currentSettings={currentSettings}
-								text="by Answer Total"
-								clickAction={setOperand}
+						<div className="settings-sublist-item radio-section-item">
+							<label htmlFor="lgNumSize">Largest Number</label>
+							<input
+								className="radio-section-item-input"
+								type="number"
+								value={currentSettings.operands.max}
+								min="0"
+								id="lgNumSize"
+								onChange={setByMaxChange}
+								disabled={(currentSettings.operands.setBy !== 'minmax')}
 							/>
-							<div className="settings-sublist-item radio-section-item">
-								<label htmlFor="totMaxAmt">Total Max Amount</label>
-								<input className="js-setnumber js-totmaxamt radio-section-item-input" type="number" value="20" min="0" id="totMaxAmt" disabled/>
-							</div>
-						</li>
-						*/}
-					</ul>
-				</div>
+						</div>
 
-				<div className="settings-section probstyle">
-					<h3 className="section-sub-title">Style</h3>
-					<ul className="settings-list input-list input-radio button-list-grid">
-						<StyleSelector
-							probStyle="vertical"
-							currentSettings={this.state.currentSettings}
-							clickAction={this.setStyle}
+						<div className="error-message">
+							<span>Smallest Number must be smaller than Largest Number</span>
+						</div>
+					</li>
+
+					{/*
+					<li className="settings-list-item maxamt">
+						<SetBySelector
+							operand="minmax"
+							currentSettings={currentSettings}
+							text="by Answer Total"
+							clickAction={setOperand}
 						/>
-						<StyleSelector
-							probStyle="horizontal"
-							currentSettings={this.state.currentSettings}
-							clickAction={this.setStyle}
-						/>
-					</ul>
-				</div>
+						<div className="settings-sublist-item radio-section-item">
+							<label htmlFor="totMaxAmt">Total Max Amount</label>
+							<input className="js-setnumber js-totmaxamt radio-section-item-input" type="number" value="20" min="0" id="totMaxAmt" disabled/>
+						</div>
+					</li>
+					*/}
+				</ul>
+			</div>
 
-				<hr/>
+			<div className="settings-section probstyle">
+				<h3 className="section-sub-title">Style</h3>
+				<ul className="settings-list input-list input-radio button-list-grid">
+					<StyleSelector
+						probStyle="vertical"
+						isActive={(currentSettings.probStyle === 'vertical')}
+						clickAction={setStyle}
+					/>
+					<StyleSelector
+						probStyle="horizontal"
+						isActive={(currentSettings.probStyle === 'horizontal')}
+						clickAction={setStyle}
+					/>
+				</ul>
+			</div>
 
-				<div className="settings-section submit-section">
-					<button
-						className="button settings-submit js-settings-submit"
-						disabled={!this.state.settingsUpdated}
-						onClick={this.applySettings}
-					><i className="fa fa-play"></i> Apply</button>
+			<hr/>
 
-					<button
-						className="button settings-reset js-settings-reset"
-						disabled={!this.state.settingsUpdated}
-						onClick={this.resetSettings}
-					><i className="fa fa-undo"></i> Reset</button>
-				</div>
+			<div className="settings-section submit-section">
+				<button
+					className="button settings-submit js-settings-submit"
+					disabled={!settingsUpdated}
+					onClick={applySettings}
+				><i className="fa fa-play"></i> Apply</button>
 
-			</section>
-    );
-  }
+				<button
+					className="button settings-reset js-settings-reset"
+					disabled={!settingsUpdated}
+					onClick={resetSettings}
+				><i className="fa fa-undo"></i> Reset</button>
+			</div>
+
+		</section>
+	);
 }
 
-const StyleSelector = ({probStyle, currentSettings, clickAction}) => {
-	const setStyle = () => {
-		clickAction(probStyle, currentSettings);
+const StyleSelector = ({probStyle, isActive, clickAction}) => {
+	const toggleStyle = () => {
+		clickAction(probStyle);
 	};
-	const isSelected = (probStyle === currentSettings.probStyle) ? 'selected' : '';
+	const isSelected = (isActive) ? 'selected' : '';
 	return(
 		<li className="settings-list-item button-grid-item">
 			<button
 				className={`probstyle-button button ${isSelected}`}
-				onClick={setStyle}
+				onClick={toggleStyle}
 			>
-				<i className={"fa fa-arrows-"+probStyle.charAt(0)}></i>
+				<i className={`fa fa-arrows-${probStyle.charAt(0)}`}></i>
 				<span className="hide">{probStyle}</span>
 			</button>
 		</li>
@@ -254,14 +244,14 @@ const StyleSelector = ({probStyle, currentSettings, clickAction}) => {
 
 const OperationSelector = ({operation, currentSettings, clickAction}) => {
 	const setOperation = () => {
-		// console.log(operation, currentSettings);
 		clickAction(operation, currentSettings);
 	}
+	const isSelected = (currentSettings.operations[operation]) ? 'selected' : '';
 	return (
 		<li className="settings-list-item button-grid-item">
 			
 			<button
-				className={"operand-select button" + ((currentSettings.operations[operation]) ? ' selected' : '')}
+				className={`operand-select button ${isSelected}`}
 				onClick={setOperation}
 			>{operandSymbols[operation]}</button>
 
@@ -287,8 +277,9 @@ const SetBySelector = ({operand, currentSettings, text, clickAction}) => {
 	const setOperand = () => {
 		clickAction(operand, currentSettings);
 	}
+	const isSelected = (currentSettings.operands.setBy === operand) ? ' selected' : '';
 	return (
-		<button className={'settings-sub-subtitle button'+ ((currentSettings.operands.setBy === operand) ? ' selected' : '')} onClick={setOperand}>{text}</button>
+		<button className={`settings-sub-subtitle button ${isSelected}`} onClick={setOperand}>{text}</button>
 	)
 }
 
