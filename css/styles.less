@@ -280,12 +280,13 @@ footer {
 @borderWidth:1px;
 
 .button-list-grid {
+	display: flex;
+	flex-flow: row nowrap;
 	width:100%;
 	margin:0; padding:0;
-	//text-align: center;
 
 	.button-grid-item {
-		display: inline-block;
+		// display: inline-block;
 		width:@buttonGridSize; height:@buttonGridSize;
 		margin:0; padding:0;
 		border-style:solid;
@@ -357,7 +358,7 @@ footer {
 	text-align: center;
 	color: white;
 	font-weight: normal;
-	text-shadow-color: blue;
+	text-shadow: 1px 1px 1px blue;
 	border-bottom: dashed 1px;
 
 	&:focus {

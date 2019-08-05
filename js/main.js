@@ -1,3 +1,6 @@
+const _q = (q) => document.querySelector(q);
+const _qall = (q) => document.querySelectorAll(q);
+
 var mt = {
 	settings : {
 		totalProbs : 100,
@@ -115,25 +118,20 @@ var mt = {
 					break;
 			}
 
-			var template = $('.prob.template').clone();
-			$(template).removeClass('template');
-			$(template).attr({
-				'data-index' : i+1,
-				'data-problemtype' : probtype
-			});
-			$(template).find('.question').attr({
-				'for'			: 'problem'+i
-			});
-			$(template).find('.num-a').text(''+numA);
-			$(template).find('.num-b').text(''+numB);
-			$(template).find('.operator').text(mt.problemtypes[probtype]);
-			$(template).find('.answer').attr({
-				'id'			: 'problem'+i,
-				'tab-index'		: i,
-				'name'			: 'answer'+i,
-				'data-answer'	: answer
-			});
-			$(template).appendTo($('.problems'));
+			var template = _q('.prob.template').cloneNode(true);
+			template.classList.remove('template');
+			template.dataset.index = i + 1;
+			template.dataset.problemtype = probtype;
+			template.querySelector('.question').setAttribute('for', 'problem'+i);
+			template.querySelector('.num-a').innerText = ''+numA;
+			template.querySelector('.num-b').innerText = ''+numB;
+			template.querySelector('.operator').innerText = mt.problemtypes[probtype];
+			var answerNode = template.querySelector('.answer');
+			answerNode.setAttribute('id', 'problem'+i);
+			answerNode.setAttribute('tab-index', i);
+			answerNode.setAttribute('name', 'answer'+i);
+			answerNode.dataset.answer = answer;
+			_q('.problems').appendChild(template);
 		};
 	},
 	checkanswers : function(){
@@ -143,22 +141,25 @@ var mt = {
 			'answered'	: 0,
 			'correct'	: 0
 		};
-		$('.problems .prob').each(function(){
-			var prob = $(this),
-				answer = $(this).find('.answer'),
-				answerNum = parseInt(answer.attr('data-answer')),
-				solvedNum = answer.val();
+		_qall('.problems .prob').forEach(function(prob){
+			var answer = prob.querySelector('.answer');
+			var answerNum = parseInt(answer.dataset.answer);
+			var solvedNum = answer.value;
+
 			++totals.problems;
+
 			if(solvedNum != ''){
 				++totals.answered;
 				if(answerNum == solvedNum){
 					// correct answer
-					answer.removeClass('incorrect-fixed').removeClass('incorrect').addClass('correct');
-					answer.prop('disabled',true);
+					answer.classList.remove('incorrect-fixed', 'incorrect');
+					answer.classList.add('correct');
+					answer.setAttribute('disabled', true);
 					++totals.correct;
 				} else {
 					// incorrect answer
-					answer.removeClass('incorrect-fixed').addClass('incorrect');
+					answer.classList.remove('incorrect-fixed');
+					answer.classList.add('incorrect');
 				}
 			}
 		});
@@ -166,18 +167,26 @@ var mt = {
 	},
 	clearanswers : function(){
 		// clears answers without creating new problems.
-		$('.prob .answer').val('').attr('data-solve','').removeClass('incorrect incorrect-fixed correct').prop('disabled',false);
+		_qall('.prob .answer').forEach(function(ans) {
+			ans.value = '';
+			ans.dataset.solve = 0;
+			ans.classList.remove('incorrect', 'incorrect-fixed', 'correct');
+			ans.setAttribute('disabled', false);
+		});
 	},
 	regenerate : function(){
 		// remove all current problems and generate new ones.
 		mt.settingsSet();
-		$('.problems .prob').remove();
+		_qall('.problems .prob').forEach(function(prob) {
+			prob.parentNode.removeChild(prob);
+		});
 		mt.buildProbs(mt.settings.totalProbs);
 	},
 	itemsSet : function(){
 		// apply settings to items on the page that require them.
-		$('input.js-max-count').val(mt.settings.totalProbs);
-		$('.js-problems').removeClass('problems-vertical').removeClass('problems-horizontal').addClass('problems-'+mt.settings.style.toLowerCase());
+		_q('input.js-max-count').value = mt.settings.totalProbs;
+		_q('.js-problems').classList.remove('problems-vertical', 'problems-horizontal');
+		_q('.js-problems').classList.add(`problems-${mt.settings.style.toLowerCase()}`);
 	},
 	setInitialSettings : function(){
 		// set initial settings.  If there's info stored client side, use it.  otherwise use defaults.
@@ -192,43 +201,48 @@ var mt = {
 			TODO: set settings UI to values in mt.settings
 		*/
 		// assign values to markup
-		var $settings = $('#settingsUI'),
+		const settings = _q('#settingsUI'),
 			s = mt.settings;
-		$settings.find('#operandAddition').prop('checked',s.problemtypes.addition);
-		$settings.find('#operandSubtraction').prop('checked',s.problemtypes.subtraction);
-		$settings.find('#operandMultiplication').prop('checked',s.problemtypes.multiplication);
-		$settings.find('#operandAdditionDivision').prop('checked',s.problemtypes.division);
+		settings.querySelector('#operandAddition').setAttribute('checked', s.problemtypes.addition);
+		settings.querySelector('#operandSubtraction').setAttribute('checked', s.problemtypes.subtraction);
+		settings.querySelector('#operandMultiplication').setAttribute('checked', s.problemtypes.multiplication);
+		settings.querySelector('#operandDivision').setAttribute('checked', s.problemtypes.division);
 
-		$settings.find('#setNumMinMax').prop('checked',s.numbers.setByMinMax).parent().find('.js-setnumber').prop('disabled',!s.numbers.setByMinMax);
-		$settings.find('#setNumAnsTotal').prop('checked',s.numbers.setByTotAmt).parent().find('.js-setnumber').prop('disabled',!s.numbers.setByTotAmt);
-		$settings.find('#smNumSize').val(s.numbers.minNum);
-		$settings.find('#lgNumSize').val(s.numbers.maxNum);
-		$settings.find('#totMaxAmt').val(s.numbers.maxAnswerTotal);
+		settings.querySelector('#setNumMinMax').setAttribute('checked', s.numbers.setByMinMax)
+		settings.querySelector('#setNumMinMax').parentNode.querySelector('.js-setnumber').setAttribute('disabled', !s.numbers.setByMinMax);
+		settings.querySelector('#setNumAnsTotal').setAttribute('checked',s.numbers.setByTotAmt);
+		settings.querySelector('#setNumAnsTotal').parentNode.querySelector('.js-setnumber').setAttribute('disabled',!s.numbers.setByTotAmt);
+		settings.querySelector('#smNumSize').value = s.numbers.minNum;
+		settings.querySelector('#lgNumSize').value = s.numbers.maxNum;
+		settings.querySelector('#totMaxAmt').value = s.numbers.maxAnswerTotal;
 		
-		$settings.find('.js-probstyle-input[value!='+s.style+']').prop('checked',false);
-		$settings.find('.js-probstyle-input[value='+s.style+']').prop('checked',true);
-
+		settings.querySelectorAll('.js-probstyle-input').forEach(function(inp) {
+			if (inp.value === s.style)
+				inp.setAttribute('checked', true);
+			else
+				inp.setAttribute('checked', false);
+		});
 		mt.itemsSet();
 	},
 	settingsSet : function(){
 		// get settings from #settingsUI and save to globals/localStorage.
-		var $settings = $('#settingsUI'),
+		var settings = _q('#settingsUI'),
 			s = {
-				totalProbs : parseInt($('.js-max-count').val()),
+				totalProbs : parseInt(_q('.js-max-count').value),
 				problemtypes : {
-					addition : $settings.find('#operandAddition').prop('checked'),
-					subtraction : $settings.find('#operandSubtraction').prop('checked'),
-					multiplication : $settings.find('#operandMultiplication').prop('checked'),
-					division : $settings.find('#operandAdditionDivision').prop('checked')
+					addition : settings.querySelector('#operandAddition').getAttribute('checked'),
+					subtraction : settings.querySelector('#operandSubtraction').getAttribute('checked'),
+					multiplication : settings.querySelector('#operandMultiplication').getAttribute('checked'),
+					division : settings.querySelector('#operandAdditionDivision').getAttribute('checked')
 				},
 				numbers : {
-					setByMinMax : $settings.find('#setNumMinMax').prop('checked'),
-					minNum : parseInt($settings.find('#smNumSize').val()),
-					maxNum : parseInt($settings.find('#lgNumSize').val()),
-					setByTotAmt : $settings.find('#setNumAnsTotal').prop('checked'),
-					maxAnswerTotal : parseInt($settings.find('#totMaxAmt').val())
+					setByMinMax : settings.querySelector('#setNumMinMax').getAttribute('checked'),
+					minNum : parseInt(settings.querySelector('#smNumSize').value),
+					maxNum : parseInt(settings.querySelector('#lgNumSize').value),
+					setByTotAmt : settings.querySelector('#setNumAnsTotal').getAttribute('checked'),
+					maxAnswerTotal : parseInt(settings.querySelector('#totMaxAmt').value)
 				},
-				style : $('.js-probstyle-input:checked').val()
+				style : _q('.js-probstyle-input:checked').value
 			};
 		mt.settings = s;
 		localStorage['MathPractice.settings'] = JSON.stringify(s);
@@ -245,33 +259,33 @@ var mt = {
 	},
 	valSettingsOperands : function(){
 		// Run check if there is at least one problem type selected.  If not, prompts error message.
-		var $set = $('.operands .validate.types');
-		var add = $set.find('.operand-addition').prop('checked'),
-			sub = $set.find('.operand-subtraction').prop('checked'),
-			mul = $set.find('.operand-multiplication').prop('checked'),
-			div = $set.find('.operand-division').prop('checked'),
+		var set = _q('.operands .validate.types');
+		var add = set.querySelector('.operand-addition').getAttribute('checked'),
+			sub = set.querySelector('.operand-subtraction').getAttribute('checked'),
+			mul = set.querySelector('.operand-multiplication').getAttribute('checked'),
+			div = set.querySelector('.operand-division').getAttribute('checked'),
 			validity;
 		if(!add && !sub && !mul && !div) {
-			$set.parent().find('.error-message').css({'visibility':'visible'});
+			set.parentNode.querySelector('.error-message').style.visibility = 'visible';
 			validity = false;
 		} else {
-			$set.parent().find('.error-message').css({'visibility':'hidden'});
+			set.parentNode.querySelector('.error-message').style.visibility = 'hidden';
 			validity = true;
 		}
 		return validity;
 	},
 	valSettingsMinMax : function(){
-		var $set = $('.numbers .validate.minmax');
-		var min = $set.find('#smNumSize').val(),
-			max = $set.find('#lgNumSize').val(),
+		var set = _q('.numbers .validate.minmax');
+		var min = set.querySelector('#smNumSize').value,
+			max = set.querySelector('#lgNumSize').value,
 			validity;
 		if(min <= max) {
 			// valid
-			$set.find('.error-message').css({'visibility':'hidden'});
+			set.parentNode.querySelector('.error-message').style.visibility = 'hidden';
 			validity = true;
 		} else {
 			// invalid
-			$set.find('.error-message').css({'visibility':'visible'});
+			set.parentNode.querySelector('.error-message').style.visibility = 'visible';
 			validity = false;
 		}
 		return validity;
@@ -306,7 +320,7 @@ var mt = {
 	},
 	addCornify : function(){
 		// WHEEEE!!
-		for(i=0; i<$('.js-max-count').val(); i++ ){ cornify_add(); }
+		for(i = 0; i < _q('.js-max-count').value; i++ ){ cornify_add(); }
 	},
 	init : function(){
 		/*

@@ -32,19 +32,19 @@
 							<li class="settings-list-item button-grid-item">
 								<input class="operand-input operand-addition button-grid-input js-settings-input js-settings-operand" type="checkbox" id="operandAddition" value="addition" checked>
 								<label class="operand-label button" for="operandAddition">+</label>
-							</li><li class="settings-list-item button-grid-item">
-								<input class="operand-input operand-subtraction button-grid-input js-settings-input js-settings-operand" type="checkbox" id="operandSubtraction">
+							</li>
+							<li class="settings-list-item button-grid-item">
+								<input class="operand-input operand-subtraction button-grid-input js-settings-input js-settings-operand" type="checkbox" value="subtraction" id="operandSubtraction">
 								<label class="operand-label button" for="operandSubtraction">&minus;</label>
-							</li><li class="settings-list-item button-grid-item">
-								<input class="operand-input operand-multiplication button-grid-input js-settings-input js-settings-operand" type="checkbox" id="operandMultiplication">
+							</li>
+							<li class="settings-list-item button-grid-item">
+								<input class="operand-input operand-multiplication button-grid-input js-settings-input js-settings-operand" type="checkbox" value="multiplication" id="operandMultiplication">
 								<label class="operand-label button" for="operandMultiplication">x</label>
 							</li>
-							<!--
 							<li class="settings-list-item button-grid-item">
-								<input class="operand-input operand-division button-grid-input js-settings-input js-settings-operand" type="checkbox" id="operandAdditionDivision">
-								<label class="operand-label button" for="operandAdditionDivision">&frasl;</label>
+								<input class="operand-input operand-division button-grid-input js-settings-input js-settings-operand" type="checkbox" value="division" id="operandDivision">
+								<label class="operand-label button" for="operandDivision">&divide;</label>
 							</li>
-							-->
 						</ul>
 						<div class="error-message">
 							<span>You must select at least one Problem Type</span>
@@ -104,7 +104,7 @@
 					<button class="button-list-item button js-clearanswers"><i class="fa fa-eraser"></i> Clear My Answers</button>
 					
 					<span class="button-list-item inline-input">
-						<label for="max-count" class="text-small" style="">Total problems: </label>
+						<label for="max-count" class="text-small">Total problems: </label>
 						<input name="max-count" class="input input-simple js-max-count" type="number" placeholder="Enter Number of Problems...">
 						<button class="button-list-item button js-regenerate"><i class="fa fa-refresh"></i> Create New Questions</button>
 					</span>
