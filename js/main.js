@@ -28,45 +28,47 @@ var mt = {
 	getRandomInt : function(min, max){
 		return Math.floor(Math.random() * (max - min)) + min;
 	},
-	simpleValidateOnInput : function(){
-		var el = $(this);
-		var inp = $(this).val();
+	simpleValidateOnInput : function(e){
+		var el = this;
+		var inp = e.target.value;
 		//var lastVal = inp % 10;
 		if(isNaN(inp)){
 			// if input is a string (aka 'not-a-number'), don't allow that input in the input field
 			if(inp.length > 1) { // if there was already part of an answer given...
 				var lastVal = inp.charAt(inp.length-1), // get the very last item in the list
 					initVal = inp.substr(0,inp.length-1); // get the typed answer minus this last addition
-				$(el).val(initVal).attr({
-					'data-solve' : lastVal
-				});
+				el.value = initVal;
+				el.dataset.solve = lastVal;
 			} else {
-				$(el).val('').attr({
-					'data-solve' : '' // ...just make sure the answer and attribute are cleared out if there wasn't an answer to begin with.
-				});
+				el.value = '';
+				el.dataset.solve = '';
 			}
 		} else {
 			// hey, it's a number.  update the value and data-solve attribute.
-			$(el).attr({
-				'data-solve' : inp
-			});
-			if(el.hasClass('incorrect')){
-				el.addClass('incorrect-fixed');
+			el.dataset.solve = inp;
+			if (el.classList.contains('incorrect')) {
+				el.classList.add('incorrect-fixed');
 			}
 		}
 	},
 	answerModal : function(totals){
 		// assigns values to modal and shows modal.
 		totals = totals || {};
-		var mod = $('.js-modal-answers');
-		mod.find('.total-answered').text(totals.answered+'/'+totals.problems);
-		mod.find('.total-correct').text(totals.correct+'/'+totals.answered);
-		mod.find('.total-incorrect').text((totals.answered-totals.correct)+'/'+totals.answered);
-		$('.js-modal, .js-modal-overlay, .js-modal-answers').show();
+		const mod = _q('.js-modal-answers');
+		_q('.js-modal-answers .total-answered').innerText = `${totals.answered}/${totals.problems}`; //.text(totals.answered+'/'+totals.problems);
+		_q('.js-modal-answers .total-correct').innerText = `${totals.correct}/${totals.answered}`; //.text(totals.correct+'/'+totals.answered);
+		_q('.js-modal-answers .total-incorrect').innerText = `${totals.answered - totals.correct}/${totals.answered}`; //.text((totals.answered-totals.correct)+'/'+totals.answered);
+		_q('.js-modal').style.display = 'flex';
+		_q('.js-modal-overlay').style.display = 'block';
+		_q('.js-modal-answers').style.display = 'block';
 	},
 	closeModal : function(){
 		// closes modal.
-		$('.js-modal, .js-modal-overlay, .js-modal-box').hide();
+		// $('.js-modal, .js-modal-overlay, .js-modal-box').hide();
+
+		_q('.js-modal').style.display = 'none';
+		_q('.js-modal-overlay').style.display = 'none';
+		_q('.js-modal-answers').style.display = 'none';
 	},
 	buildProbs : function(total){
 		// create and show problem.  Loops as many times as the current problem count is set.
@@ -171,7 +173,7 @@ var mt = {
 			ans.value = '';
 			ans.dataset.solve = 0;
 			ans.classList.remove('incorrect', 'incorrect-fixed', 'correct');
-			ans.setAttribute('disabled', false);
+			ans.removeAttribute('disabled');
 		});
 	},
 	regenerate : function(){
@@ -233,7 +235,7 @@ var mt = {
 					addition : settings.querySelector('#operandAddition').getAttribute('checked'),
 					subtraction : settings.querySelector('#operandSubtraction').getAttribute('checked'),
 					multiplication : settings.querySelector('#operandMultiplication').getAttribute('checked'),
-					division : settings.querySelector('#operandAdditionDivision').getAttribute('checked')
+					division : settings.querySelector('#operandDivision').getAttribute('checked')
 				},
 				numbers : {
 					setByMinMax : settings.querySelector('#setNumMinMax').getAttribute('checked'),
@@ -300,23 +302,48 @@ var mt = {
 	},
 	buttonBindings : function(){
 		// binding custom events to buttons on the page.
-		$('.settings-menu-toggle').on('click',function(){
-			var $a = $(this).parents('.settings');
-			if($a.hasClass('open')) $a.removeClass('open');
-			else $a.addClass('open');
-		});
-		$('.js-setnumbers').on('change',function(){
-			var $a = $(this);
-			$a.parent().find('.js-setnumber').prop('disabled',false);
-			$('.js-setnumbers[id!='+$a.attr('id')+']').parent().find('.js-setnumber').prop('disabled',true);
-		});
-		$('.js-settings-submit').on('click',mt.settingsSubmit);
+		_q('.settings-menu-toggle').onclick = function() {
+			const a = this.parentNode;
+			a.classList.toggle('open');
+		};
+		// $('.js-setnumbers').on('change',function(){
+		// 	var $a = $(this);
+		// 	$a.parent().find('.js-setnumber').prop('disabled',false);
+		// 	$('.js-setnumbers[id!='+$a.attr('id')+']').parent().find('.js-setnumber').prop('disabled',true);
+		// }); 
+		_q('.js-setnumbers').onclick = function() {
+			const a = this;
+			a.parentNode.querySelector('.js-setnumber').setAttribute('disabled', false);
+			_q(`.js-setnumbers[id!='${a.getAttribute('id')}']`)
+			_qall('.js-setnumbers').forEach(function(setnum) {
+				if (setnum.getAttribute('id') !== a.getAttribute('id'))
+					setnum.parentNode.querySelector('.js-setnumber').setAttribute('disabled', true);
+			});
+		};
+		// $('.js-settings-submit').on('click',mt.settingsSubmit);
+		_q('.js-settings-submit').onclick = () => mt.settingsSubmit();
 
-		$('.js-checkanswers').on('click',mt.checkanswers);
-		$('.js-clearanswers').on('click',mt.clearanswers);
-		$('.js-regenerate').on('click',mt.regenerate);
-		$('#MathSentences input.answer').bind('input propertychange', mt.simpleValidateOnInput);
-		$('.js-modal-continue, .js-modal-overlay').on('click', mt.closeModal);
+		// $('.js-checkanswers').on('click',mt.checkanswers);
+		_q('.js-checkanswers').onclick = () => mt.checkanswers();
+
+		// $('.js-clearanswers').on('click',mt.clearanswers);
+		_q('.js-clearanswers').onclick = mt.clearanswers;
+
+		// $('.js-regenerate').on('click',mt.regenerate);
+		_q('.js-regenerate').onclick = () => mt.regenerate();
+
+		// $('#MathSentences input.answer').bind('input propertychange', mt.simpleValidateOnInput);
+		// _qall('#MathSentences input.answer').onchange = (this) => mt.simpleValidateOnInput(this);
+		// _qall('#MathSentences input.answer').onchange = mt.simpleValidateOnInput();
+		_qall('#MathSentences input.answer').forEach(function(ans) {
+			// ans.onchange = mt.simpleValidateOnInput();
+			const validation = mt.simpleValidateOnInput.bind(ans);
+			ans.addEventListener('change', validation);
+		});
+
+		// $('.js-modal-continue, .js-modal-overlay').on('click', mt.closeModal);
+		_q('.js-modal-continue').onclick = () => mt.closeModal();
+		_q('.js-modal-overlay').onclick = () => mt.closeModal();
 	},
 	addCornify : function(){
 		// WHEEEE!!
