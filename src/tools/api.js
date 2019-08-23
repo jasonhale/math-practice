@@ -1,5 +1,5 @@
 
-function setSettings(settings) {
+export function setSettings(settings) {
   if(localStorage.getItem('mathpractice')){
     localStorage.removeItem('mathpractice');
   }
@@ -7,7 +7,7 @@ function setSettings(settings) {
   console.log('...saved');
 }
 
-function getSettings() {
+export function getSettings() {
   const settings = localStorage.getItem('mathpractice');
   console.log('...set');
   return settings ? JSON.parse(settings) : {};

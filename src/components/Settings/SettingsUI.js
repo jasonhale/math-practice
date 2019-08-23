@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import isEqual from 'lodash.isequal';
-import {operandSymbols} from '../tools/utils';
+import StyleSelector from './StyleSelector';
+import OperationSelector from './OperationSelector';
+import SetBySelector from './SetBySelector';
 import './SettingsUI.css';
 
-function SettingsUI({operations, count, operands, probStyle, onSave}) {
+export default function SettingsUI({operations, count, operands, probStyle, onSave}) {
 	let initialSettings = {
 		operations: { ...operations },
 		count: count,
@@ -223,64 +225,3 @@ initialSettings: %o
 		</section>
 	);
 }
-
-const StyleSelector = ({probStyle, isActive, clickAction}) => {
-	const toggleStyle = () => {
-		clickAction(probStyle);
-	};
-	const isSelected = (isActive) ? 'selected' : '';
-	return(
-		<li className="settings-list-item button-grid-item">
-			<button
-				className={`probstyle-button button ${isSelected}`}
-				onClick={toggleStyle}
-			>
-				<i className={`fa fa-arrows-${probStyle.charAt(0)}`}></i>
-				<span className="hide">{probStyle}</span>
-			</button>
-		</li>
-	);
-};
-
-const OperationSelector = ({operation, currentSettings, clickAction}) => {
-	const setOperation = () => {
-		clickAction(operation, currentSettings);
-	}
-	const isSelected = (currentSettings.operations[operation]) ? 'selected' : '';
-	return (
-		<li className="settings-list-item button-grid-item">
-			
-			<button
-				className={`operand-select button ${isSelected}`}
-				onClick={setOperation}
-			>{operandSymbols[operation]}</button>
-
-			{/*
-			<input
-				className={`operand-input operand-${operation} button-grid-input`}
-				type="checkbox"
-				id={`operand${operation}`}
-				value={operation}
-				checked={currentSettings.operations[operation]}
-				onChange={setOperation}
-			/>
-			<label
-				className="operand-label button"
-				htmlFor={`operand${operation}`}
-			>{operandSymbols[operation]}</label>
-			*/}
-		</li>
-	);
-};
-
-const SetBySelector = ({operand, currentSettings, text, clickAction}) => {
-	const setOperand = () => {
-		clickAction(operand, currentSettings);
-	}
-	const isSelected = (currentSettings.operands.setBy === operand) ? ' selected' : '';
-	return (
-		<button className={`settings-sub-subtitle button ${isSelected}`} onClick={setOperand}>{text}</button>
-	)
-}
-
-export default SettingsUI;

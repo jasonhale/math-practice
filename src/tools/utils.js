@@ -3,28 +3,8 @@
 */
 
 /* ## Generate problems from config settings */
-// {
-//   "operations": {
-//     "addition": true,
-//     "subtraction": false,
-//     "multiplication": false,
-//     "division": false
-//   },
-//   "count": 50,
-//   "operands": {
-//     "setBy": "minmax",
-//     "min": 0,
-//     "max": 9,
-//     "maxAnswer": 20
-//   },
-//   "probStyle": "vertical"
-// };
-// {
-//       numA: 0,
-//       numB: 0,
-//       operator: '+',
-//       answer: 0
-//     }
+
+import initialState from './initialState';
 
 export const operandSymbols = {
   'addition': '+',
@@ -37,15 +17,24 @@ function getRandomInt(min, max){
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-export function generateProblems(operations, count, operands) {
+export function generateProblems(
+    operations = initialState.operations,
+    count = initialState.count,
+    operands = initialState.operands
+  ) {
+  if (!operations) return [];
+
   let equations = []; // where the generated math problems will be stored.
 
   // create array of possible operations from operations list.
   const probtypes = Object.keys(operations); // get array of all possibilities.
-  function filterBy(value){
-    return operations[value];
-  }
-  const currentProbTypes = probtypes.filter(filterBy);
+
+  // function filterBy(value){
+  //   return operations[value];
+  // }
+
+  // const currentProbTypes = probtypes.filter(filterBy);
+  const currentProbTypes = probtypes.map((p) => operations[p]);
   // let currentProbTypes = probtypes.map((prob) => {
   //   if(operations[prob]){ // if setting is _true_, add to array of currently chose problem types.
   //     return prob;
@@ -73,9 +62,9 @@ export function generateProblems(operations, count, operands) {
         case 'subtraction':
           // in the case of subtraction, lets just put the larger number on top for now so we don't have to deal with negative numbers.
           if (numA < numB) {
-            var tmp = numA;
+            var tmpA = numA;
             numA = numB;
-            numB = tmp;
+            numB = tmpA;
           }
           answer = numA - numB;
           break;
@@ -108,7 +97,7 @@ export function generateProblems(operations, count, operands) {
       // let numA = getRandomInt(operands.min, operands.max), // get random number in range...
       //     numB = getRandomInt(operands.min, operands.max), // ... of min & max declarations
       //     answer;
-      let numA = 0
+      let numA = 0,
           numB = 0,
           answer = getRandomInt(0, operands.max);
       const probtype = (currentProbTypes.length > 1) ? currentProbTypes[Math.floor(Math.random() * currentProbTypes.length)] : currentProbTypes[0];
@@ -120,7 +109,7 @@ export function generateProblems(operations, count, operands) {
           numB = answer - numA;
           break;
 
-        case 'subtraction':
+        case 'subtraction': {
           numA = getRandomInt(0, answer);
           numB = '';
           if (numA < numB) {
@@ -129,6 +118,7 @@ export function generateProblems(operations, count, operands) {
             numB = tmp;
           }
           break;
+        }
 
         case 'multiplication':
           answer = numA * numB;

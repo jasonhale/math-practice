@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-import './css/App.css';
-import './css/styles.css';
+import './App.css';
+// import './css/styles.css';
 import Header from './components/Header';
-import SettingsUI from './components/SettingsUI';
+import SettingsUI from './components/Settings/SettingsUI';
 import Problem from './components/Problem';
 import Modal from './components/Modal';
-import Header from './components/Header';
 import Footer from './components/Footer';
 import {generateProblems} from './tools/utils.js';
 import { setSettings } from './tools/api';
@@ -119,6 +118,26 @@ class App extends Component {
     this.setState({ problems });
   };
 
+  renderProblems = () => {
+    const { problems } = this.state;
+
+    return problems.map((problem, i) => 
+      (
+        <Problem
+          key={`problem${i}`}
+          index={i}
+          name={`problem${i}`}
+          operator={problem.operator}
+          numA={problem.numA}
+          numB={problem.numB}
+          answer={problem.answer}
+          input={problem.input}
+          onChange={this.onChange}
+        />
+      )
+    );
+  }
+
   render() {
 
     return (
@@ -143,23 +162,7 @@ class App extends Component {
 
         <main className="mainColumn mainSection">
           <ul className={`problems problems--${this.state.probStyle} ${this.state.reveal && 'problems--reveal'}`}>
-            {
-              this.state.problems.map((problem, i) => 
-                (
-                  <Problem
-                    key={`problem${i}`}
-                    index={i}
-                    name={`problem${i}`}
-                    operator={problem.operator}
-                    numA={problem.numA}
-                    numB={problem.numB}
-                    answer={problem.answer}
-                    input={problem.input}
-                    onChange={this.onChange}
-                  />
-                )
-              )
-            }
+            { this.renderProblems() }
           </ul>
         </main>
         
