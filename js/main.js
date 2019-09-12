@@ -306,11 +306,7 @@ var mt = {
 			const a = this.parentNode;
 			a.classList.toggle('open');
 		};
-		// $('.js-setnumbers').on('change',function(){
-		// 	var $a = $(this);
-		// 	$a.parent().find('.js-setnumber').prop('disabled',false);
-		// 	$('.js-setnumbers[id!='+$a.attr('id')+']').parent().find('.js-setnumber').prop('disabled',true);
-		// }); 
+		
 		_q('.js-setnumbers').onclick = function() {
 			const a = this;
 			a.parentNode.querySelector('.js-setnumber').setAttribute('disabled', false);
@@ -320,28 +316,17 @@ var mt = {
 					setnum.parentNode.querySelector('.js-setnumber').setAttribute('disabled', true);
 			});
 		};
-		// $('.js-settings-submit').on('click',mt.settingsSubmit);
+		
 		_q('.js-settings-submit').onclick = () => mt.settingsSubmit();
-
-		// $('.js-checkanswers').on('click',mt.checkanswers);
 		_q('.js-checkanswers').onclick = () => mt.checkanswers();
-
-		// $('.js-clearanswers').on('click',mt.clearanswers);
 		_q('.js-clearanswers').onclick = mt.clearanswers;
-
-		// $('.js-regenerate').on('click',mt.regenerate);
 		_q('.js-regenerate').onclick = () => mt.regenerate();
 
-		// $('#MathSentences input.answer').bind('input propertychange', mt.simpleValidateOnInput);
-		// _qall('#MathSentences input.answer').onchange = (this) => mt.simpleValidateOnInput(this);
-		// _qall('#MathSentences input.answer').onchange = mt.simpleValidateOnInput();
 		_qall('#MathSentences input.answer').forEach(function(ans) {
-			// ans.onchange = mt.simpleValidateOnInput();
 			const validation = mt.simpleValidateOnInput.bind(ans);
 			ans.addEventListener('change', validation);
 		});
 
-		// $('.js-modal-continue, .js-modal-overlay').on('click', mt.closeModal);
 		_q('.js-modal-continue').onclick = () => mt.closeModal();
 		_q('.js-modal-overlay').onclick = () => mt.closeModal();
 	},

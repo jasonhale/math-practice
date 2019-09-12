@@ -17,7 +17,8 @@
 		<link rel="stylesheet" type="text/css" href="css/print.css" media="print">
 	</head>
 	<body>
-		<a class="corny" href="#" onclick="mt.addCornify(); return false;" style="opacity:0;position:absolute;">CLICK ME!!<br/>CLICK ME NOW!!</a>
+		<button type="button" class="corny" onclick="mt.addCornify(); return false;" style="opacity:0;position:absolute;">CLICK ME!!<br/>CLICK ME NOW!!</button>
+
 		<div id="siteWrap" class="site-wrap">
 			<header class="mainColumn mainSection">
 				<h1>Math Practice Time</h1>
@@ -39,6 +40,7 @@
 
 			<section id="settingsUI" class="settings">
 				<button class="button settings-menu-toggle"><i class="fa fa-gear"></i></button>
+				
 				<div class="settings-container">	
 					<h2 class="section-title"><i class="fa fa-gear"></i> Settings</h2>
 					<div class="settings-section operands">
@@ -99,7 +101,8 @@
 							<li class="settings-list-item button-grid-item">
 								<input class="probstyle-input probstyle-vertical js-probstyle-input button-grid-input" type="radio" id="probstyleVertical" name="probstyle" value="vertical" checked>
 								<label class="probstyle-label button" for="probstyleVertical"><i class="fa fa-arrows-v"></i><span class="hide">Vertical</span></label>
-							</li><li class="settings-list-item button-grid-item">
+							</li>
+							<li class="settings-list-item button-grid-item">
 								<input class="probstyle-input probstyle-horizontal js-probstyle-input button-grid-input" type="radio" id="probstyleHorizontal" name="probstyle" value="horizontal">
 								<label class="probstyle-label button" for="probstyleHorizontal"><i class="fa fa-arrows-h"></i><span class="hide">Horizontal</span></label>
 							</li>
