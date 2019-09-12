@@ -1,6 +1,9 @@
+@import '/css/fonts.css';
+
 :root {
 	--noOfCols: 10;
-	--probWidth: calc(1/var(--noOfCols));
+	--probWidth: 10%;
+	/* calc(1 / var(--noOfCols)); */
 
 	--z-lower: 1;
 	--z-middle: 50;
@@ -17,8 +20,6 @@
 	--buttonGridSize: 3rem;
 	--borderWidth: 1px;
 }
-
-@import 'font.less';
 
 .corny {
 	display:block;
@@ -124,16 +125,14 @@ label, button, input, .button {
 	max-width: 3rem;
 }
 
-footer {
-	clear: both;
-	overflow: hidden;
+.footer {
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: space-between;
 }
-.footer-col {
-	float: left;
+.footer__col {
+	
 }
-	.footer-col + .footer-col {
-		float: right;
-	}
 
 #pageUI .inline-input .text-small {
 	font-weight: bold;
@@ -159,17 +158,22 @@ footer {
 
 .problems {
 	margin: 0;
-	padding: 0 0 5rem;
+	padding: 2rem 0 5rem;
 	list-style: none outside none;
+
+	display: grid;
+	grid-template-columns: repeat(10, 1fr);
+	grid-gap: 2rem;
 }
 .prob {
-	display: inline-block;
+	/* display: inline-block;
 	min-width: 2rem;
 	width: calc(var(--probWidth) - 4);
 	margin: 1rem calc((var(--probWidth) - 6) / 2 - 0.1);
-	padding:0;
+	padding: 0;
 	font-weight: bold;
-	overflow: hidden;
+	overflow: hidden; */
+	font-weight: bold;
 }
 .question {
 	display: block;
@@ -374,12 +378,12 @@ footer {
 		justify-content: center;
 		align-items: center;
 	}
-.modal-overlay {
+.modal__overlay {
 	background: none rgba(0,0,0,.7);
 	position: absolute;
 	top: 0; right: 0; bottom: 0; left: 0; z-index: var(--z-top);
 }
-.modal-box {
+.modal__box {
 	width: 50%;
 	min-width: 300px;
 	background-color: white;
@@ -388,7 +392,7 @@ footer {
 	box-shadow: 5px 5px 10px black;
 	position: relative; z-index: calc(var(--z-top) + 1);
 }
-.modal-answer .answer-total {
+.modal__answer-total {
 	font-weight: bold;
 }
 

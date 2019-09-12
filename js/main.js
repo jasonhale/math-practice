@@ -55,9 +55,9 @@ var mt = {
 		// assigns values to modal and shows modal.
 		totals = totals || {};
 		const mod = _q('.js-modal-answers');
-		_q('.js-modal-answers .total-answered').innerText = `${totals.answered}/${totals.problems}`; //.text(totals.answered+'/'+totals.problems);
-		_q('.js-modal-answers .total-correct').innerText = `${totals.correct}/${totals.answered}`; //.text(totals.correct+'/'+totals.answered);
-		_q('.js-modal-answers .total-incorrect').innerText = `${totals.answered - totals.correct}/${totals.answered}`; //.text((totals.answered-totals.correct)+'/'+totals.answered);
+		_q('.js-modal-answers .js-total-answered').innerText = `${totals.answered}/${totals.problems}`; //.text(totals.answered+'/'+totals.problems);
+		_q('.js-modal-answers .js-total-correct').innerText = `${totals.correct}/${totals.answered}`; //.text(totals.correct+'/'+totals.answered);
+		_q('.js-modal-answers .js-total-incorrect').innerText = `${totals.answered - totals.correct}/${totals.answered}`; //.text((totals.answered-totals.correct)+'/'+totals.answered);
 		_q('.js-modal').style.display = 'flex';
 		_q('.js-modal-overlay').style.display = 'block';
 		_q('.js-modal-answers').style.display = 'block';
