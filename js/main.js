@@ -62,7 +62,7 @@ var mt = {
 		_q('.js-modal-overlay').style.display = 'block';
 		_q('.js-modal-answers').style.display = 'block';
 	},
-	closeModal : function(){
+	closeModal : function() {
 		// closes modal.
 		// $('.js-modal, .js-modal-overlay, .js-modal-box').hide();
 
@@ -73,14 +73,19 @@ var mt = {
 	buildProbs : function(total){
 		// create and show problem.  Loops as many times as the current problem count is set.
 
-		// more than one type of problem?  If so, set a global setting and store a local array of only those problem types that are chosen/set.
+		// more than one type of problem?
+		// If so, set a global setting and store a local array of only those problem types that are chosen/set.
 		var probtypes = Object.keys(mt.settings.problemtypes);
-		var multProb = [];
-		for(var i = 0; i < probtypes.length; i++){
-			if(mt.settings.problemtypes[probtypes[i]]) multProb.push(probtypes[i]);
-		}
-		if ( multProb.length > 1 ) mt.settings.multProbTypes = true;
-		else mt.settings.multProbTypes = false;
+		const multProb = probtypes.filter(t => (mt.settings.problemtypes[t] === true || mt.settings.problemtypes[t] === 'true'));
+		// var multProb = [];
+		// for(var i = 0; i < probtypes.length; i++){
+		// 	if(mt.settings.problemtypes[probtypes[i]]) multProb.push(probtypes[i]);
+		// }
+		// if ( multProb.length > 1 ) mt.settings.multProbTypes = true;
+		// else mt.settings.multProbTypes = false;
+		console.log('multProb', multProb);
+
+		mt.settings.multProbTypes = !!(multProb.length > 1);
 
 		for (var i = 0; i < total; i++) {
 			var numA = mt.getRandomInt(mt.settings.numbers.minNum, mt.settings.numbers.maxNum),
@@ -136,7 +141,7 @@ var mt = {
 			_q('.problems').appendChild(template);
 		};
 	},
-	checkanswers : function(){
+	checkanswers : function() {
 		// goes through each problem and checks whether it is correct/incorrect.
 		var totals = {
 			'problems'	: 0,
@@ -167,7 +172,7 @@ var mt = {
 		});
 		mt.answerModal(totals);
 	},
-	clearanswers : function(){
+	clearanswers : function() {
 		// clears answers without creating new problems.
 		_qall('.prob .answer').forEach(function(ans) {
 			ans.value = '';
@@ -176,7 +181,7 @@ var mt = {
 			ans.removeAttribute('disabled');
 		});
 	},
-	regenerate : function(){
+	regenerate : function() {
 		// remove all current problems and generate new ones.
 		mt.settingsSet();
 		_qall('.problems .prob').forEach(function(prob) {
@@ -184,31 +189,36 @@ var mt = {
 		});
 		mt.buildProbs(mt.settings.totalProbs);
 	},
-	itemsSet : function(){
+	itemsSet : function() {
 		// apply settings to items on the page that require them.
 		_q('input.js-max-count').value = mt.settings.totalProbs;
 		_q('.js-problems').classList.remove('problems-vertical', 'problems-horizontal');
 		_q('.js-problems').classList.add(`problems-${mt.settings.style.toLowerCase()}`);
 	},
-	setInitialSettings : function(){
+	setInitialSettings : function() {
 		// set initial settings.  If there's info stored client side, use it.  otherwise use defaults.
-		if(Modernizr.localstorage){
-			if(localStorage['MathPractice.settings']){
-				mt.settings = JSON.parse(localStorage['MathPractice.settings']);
+		if(window.localStorage) {
+			const storedSettings = localStorage.getItem('MathPractice.settings');
+			if (storedSettings) { 
+				mt.settings = JSON.parse(storedSettings);
 			} else {
-				localStorage['MathPractice.settings'] = JSON.stringify(mt.settings);
+				localStorage.setItem('MathPractice.settings', JSON.stringify(mt.settings));
 			}
 		}
-		/*
-			TODO: set settings UI to values in mt.settings
-		*/
+
+		console.log('setInitialSettings', mt.settings);
+		
 		// assign values to markup
 		const settings = _q('#settingsUI'),
 			s = mt.settings;
-		settings.querySelector('#operandAddition').setAttribute('checked', s.problemtypes.addition);
-		settings.querySelector('#operandSubtraction').setAttribute('checked', s.problemtypes.subtraction);
-		settings.querySelector('#operandMultiplication').setAttribute('checked', s.problemtypes.multiplication);
-		settings.querySelector('#operandDivision').setAttribute('checked', s.problemtypes.division);
+		// settings.querySelector('#operandAddition').setAttribute('checked', s.problemtypes.addition);
+		// settings.querySelector('#operandSubtraction').setAttribute('checked', s.problemtypes.subtraction);
+		// settings.querySelector('#operandMultiplication').setAttribute('checked', s.problemtypes.multiplication);
+		// settings.querySelector('#operandDivision').setAttribute('checked', s.problemtypes.division);
+		settings.querySelector('#operandAddition').checked = JSON.parse(s.problemtypes.addition);
+		settings.querySelector('#operandSubtraction').checked = JSON.parse(s.problemtypes.subtraction);
+		settings.querySelector('#operandMultiplication').checked = JSON.parse(s.problemtypes.multiplication);
+		settings.querySelector('#operandDivision').checked = JSON.parse(s.problemtypes.division);
 
 		settings.querySelector('#setNumMinMax').setAttribute('checked', s.numbers.setByMinMax)
 		settings.querySelector('#setNumMinMax').parentNode.querySelector('.js-setnumber').setAttribute('disabled', !s.numbers.setByMinMax);
@@ -224,48 +234,49 @@ var mt = {
 			else
 				inp.setAttribute('checked', false);
 		});
-		mt.itemsSet();
-	},
-	settingsSet : function(){
-		// get settings from #settingsUI and save to globals/localStorage.
-		var settings = _q('#settingsUI'),
-			s = {
-				totalProbs : parseInt(_q('.js-max-count').value),
-				problemtypes : {
-					addition : settings.querySelector('#operandAddition').getAttribute('checked'),
-					subtraction : settings.querySelector('#operandSubtraction').getAttribute('checked'),
-					multiplication : settings.querySelector('#operandMultiplication').getAttribute('checked'),
-					division : settings.querySelector('#operandDivision').getAttribute('checked')
-				},
-				numbers : {
-					setByMinMax : settings.querySelector('#setNumMinMax').getAttribute('checked'),
-					minNum : parseInt(settings.querySelector('#smNumSize').value),
-					maxNum : parseInt(settings.querySelector('#lgNumSize').value),
-					setByTotAmt : settings.querySelector('#setNumAnsTotal').getAttribute('checked'),
-					maxAnswerTotal : parseInt(settings.querySelector('#totMaxAmt').value)
-				},
-				style : _q('.js-probstyle-input:checked').value
-			};
-		mt.settings = s;
-		localStorage['MathPractice.settings'] = JSON.stringify(s);
 
 		mt.itemsSet();
 	},
-	settingsGo : function(){
+	settingsSet : function() {
+		// get settings from #settingsUI and save to globals/localStorage.
+		var settings = _q('#settingsUI');
+		var s = {
+			totalProbs : parseInt(_q('.js-max-count').value),
+			problemtypes : {
+				addition : settings.querySelector('#operandAddition').checked,
+				subtraction : settings.querySelector('#operandSubtraction').checked,
+				multiplication : settings.querySelector('#operandMultiplication').checked,
+				division : settings.querySelector('#operandDivision').checked
+			},
+			numbers : {
+				setByMinMax : settings.querySelector('#setNumMinMax').getAttribute('checked'),
+				minNum : parseInt(settings.querySelector('#smNumSize').value),
+				maxNum : parseInt(settings.querySelector('#lgNumSize').value),
+				setByTotAmt : settings.querySelector('#setNumAnsTotal').getAttribute('checked'),
+				maxAnswerTotal : parseInt(settings.querySelector('#totMaxAmt').value)
+			},
+			style : _q('.js-probstyle-input:checked').value
+		};
+		console.log('s', s);
+		mt.settings = s;
+		// localStorage['MathPractice.settings'] = JSON.stringify(s);
+		localStorage.setItem('MathPractice.settings', JSON.stringify(s));
+
+		mt.itemsSet();
+	},
+	settingsGo : function() {
 		// close settings window and get new probs with new settings.
-		/*
-			TODO: close settings window ...?
-		*/
-		mt.settingsSet();
+		// mt.settingsSet();
+		mt.closeSettings();
 		mt.regenerate();
 	},
-	valSettingsOperands : function(){
+	valSettingsOperands : function() {
 		// Run check if there is at least one problem type selected.  If not, prompts error message.
 		var set = _q('.operands .validate.types');
-		var add = set.querySelector('.operand-addition').getAttribute('checked'),
-			sub = set.querySelector('.operand-subtraction').getAttribute('checked'),
-			mul = set.querySelector('.operand-multiplication').getAttribute('checked'),
-			div = set.querySelector('.operand-division').getAttribute('checked'),
+		var add = set.querySelector('.operand-addition').checked,
+			sub = set.querySelector('.operand-subtraction').checked,
+			mul = set.querySelector('.operand-multiplication').checked,
+			div = set.querySelector('.operand-division').checked,
 			validity;
 		if(!add && !sub && !mul && !div) {
 			set.parentNode.querySelector('.error-message').style.visibility = 'visible';
@@ -276,7 +287,7 @@ var mt = {
 		}
 		return validity;
 	},
-	valSettingsMinMax : function(){
+	valSettingsMinMax : function() {
 		var set = _q('.numbers .validate.minmax');
 		var min = set.querySelector('#smNumSize').value,
 			max = set.querySelector('#lgNumSize').value,
@@ -292,7 +303,7 @@ var mt = {
 		}
 		return validity;
 	},
-	settingsSubmit : function(){
+	settingsSubmit : function() {
 		// run validate tests
 		var operandValid = mt.valSettingsOperands();
 		var minmaxValid = mt.valSettingsMinMax();
@@ -300,27 +311,27 @@ var mt = {
 		// if pass, set settings
 		if(operandValid && minmaxValid) mt.settingsGo();
 	},
-	buttonBindings : function(){
+	buttonBindings : function() {
 		// binding custom events to buttons on the page.
 		_q('.settings-menu-toggle').onclick = function() {
-			const a = this.parentNode;
+			const a = _q('.js-settings');
 			a.classList.toggle('open');
 		};
 		
 		_q('.js-setnumbers').onclick = function() {
 			const a = this;
 			a.parentNode.querySelector('.js-setnumber').setAttribute('disabled', false);
-			_q(`.js-setnumbers[id!='${a.getAttribute('id')}']`)
+			// _q(`.js-setnumbers[id!='${a.getAttribute('id')}']`)
 			_qall('.js-setnumbers').forEach(function(setnum) {
 				if (setnum.getAttribute('id') !== a.getAttribute('id'))
 					setnum.parentNode.querySelector('.js-setnumber').setAttribute('disabled', true);
 			});
 		};
 		
-		_q('.js-settings-submit').onclick = () => mt.settingsSubmit();
-		_q('.js-checkanswers').onclick = () => mt.checkanswers();
+		_q('.js-settings-submit').onclick = mt.settingsSubmit;
+		_q('.js-checkanswers').onclick = mt.checkanswers;
 		_q('.js-clearanswers').onclick = mt.clearanswers;
-		_q('.js-regenerate').onclick = () => mt.regenerate();
+		_q('.js-regenerate').onclick = mt.regenerate;
 
 		_qall('#MathSentences input.answer').forEach(function(ans) {
 			const validation = mt.simpleValidateOnInput.bind(ans);
@@ -328,13 +339,21 @@ var mt = {
 		});
 
 		_q('.js-modal-continue').onclick = () => mt.closeModal();
+		/*  Lets not do this.  Makes it too easy to accidentally close the modal.
 		_q('.js-modal-overlay').onclick = () => mt.closeModal();
+		*/
 	},
-	addCornify : function(){
+	openSettings: function() {
+		_q('.js-settings').classList.add('open');
+	},
+	closeSettings: function() {
+		_q('.js-settings').classList.remove('open');
+	},
+	addCornify : function() {
 		// WHEEEE!!
 		for(i = 0; i < _q('.js-max-count').value; i++ ){ cornify_add(); }
 	},
-	init : function(){
+	init : function() {
 		/*
 			use localStorage
 		*/
