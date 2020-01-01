@@ -1,8 +1,18 @@
 import React from 'react';
 import './Button.css';
 
-export const Button = ({classes, onClick, children}) => (
-  <button className={`button ${classes}`} onClick={onClick}>
-    {children}
-  </button>
-);
+function Button(props) {
+  const {classes, icon, ...otherProps} = props;
+
+  return (
+    <button
+      className={`button ${classes}`}
+      {...otherProps}
+    >
+      {icon && <i className={`button__icon fa ${icon}`} />}
+      {props.children}
+    </button>
+  );
+};
+
+export default Button;

@@ -1,0 +1,4 @@
+.footer {
+  grid-area: footer;
+  padding: var(--s3);
+}

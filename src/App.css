@@ -1,21 +1,27 @@
 @import './css/base.css';
 
-#siteWrap {
+.app-root {
+  display: grid;
+  grid-template-areas: 'header' 'main' 'footer';
+  grid-template-rows: min-content 1fr min-content;
+  height: 100%;
+}
+
+/* #siteWrap {
   height: 100%;
   position: relative;
-}
-.hide {
-  display: none !important;
-}
-.mainColumn {
+} */
+
+/* .mainColumn {
   width: 90%;
   max-width: 52rem;
   margin: 0 auto;
 }
 .mainSection {
   margin-bottom: 1em;
-}
-.section-title {
+} */
+
+/* .section-title {
   margin-top: .2em;
   margin-bottom: .5em;
 }

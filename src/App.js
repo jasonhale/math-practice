@@ -27,7 +27,7 @@ class App extends Component {
     }
   }
 
-  componentWillMount(){
+  componentDidMount(){
     if(!this.state.isProblemsGenerated) {
       const problems = generateProblems(this.state.operations, this.state.count, this.state.operands);
       this.setState({'isProblemsGenerated':true, 'problems':problems});
@@ -141,7 +141,7 @@ class App extends Component {
   render() {
 
     return (
-      <div id="siteWrap" className="site-wrap">
+      <>
         <SettingsUI
           operations={this.state.operations}
           count={this.state.count}
@@ -158,9 +158,7 @@ class App extends Component {
           updateCount={this.updateCount}
         />
 
-        <hr className="mainColumn" />
-
-        <main className="mainColumn mainSection">
+        <main>
           <ul className={`problems problems--${this.state.probStyle} ${this.state.reveal && 'problems--reveal'}`}>
             { this.renderProblems() }
           </ul>
@@ -175,7 +173,7 @@ class App extends Component {
           totalCorrect={this.state.answers.totalCorrect}
           totalIncorrect={this.state.answers.totalIncorrect}
         />
-      </div>
+      </>
     );
   }
 }
