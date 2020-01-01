@@ -2,11 +2,11 @@ import React from 'react';
 import './Button.css';
 
 export default function Button(props) {
-  const {classes, icon, ...otherProps} = props;
+  const {className, icon, ...otherProps} = props;
 
   return (
     <button
-      className={`button ${classes}`}
+      className={`button ${className}`}
       {...otherProps}
     >
       {icon && <i className={`button__icon fa ${icon}`} />}

@@ -26,7 +26,7 @@ function Problem({ name, operator, numA, numB, answer, index, input, onChange })
 					name={name}
 					className="answer"
 					type="text"
-					value={input}
+					// value={input}
 					onChange={inputChange}
 				/>
 			</label>

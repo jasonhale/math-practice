@@ -34,7 +34,7 @@ export function generateProblems(
   // }
 
   // const currentProbTypes = probtypes.filter(filterBy);
-  const currentProbTypes = probtypes.map((p) => operations[p]);
+  const currentProbTypes = probtypes.filter((p) => operations[p]);
   // let currentProbTypes = probtypes.map((prob) => {
   //   if(operations[prob]){ // if setting is _true_, add to array of currently chose problem types.
   //     return prob;
