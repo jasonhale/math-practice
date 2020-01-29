@@ -5,16 +5,19 @@
 	--probWidth: 10%;
 	/* calc(1 / var(--noOfCols)); */
 
+	--maxContentWidth: 52rem;
+
 	--z-lower: 1;
 	--z-middle: 50;
 	--z-top: 100;
 
 	--color: black;
+	--purple: hsl(270, 100%, 50%);
 	--buttonColor: hsla(0, 0%, 90%, 1);
   --buttonColorActive: hsla(230, 100%, 62%, 1);
-  
-  --baseFont: normal normal normal 1em/1.5 'Comic Neue', Arial, Helvetica, sans-serif;
-  --baseFontFamily: 'Comic Neue', Arial, Helvetica, sans-serif;
+	
+	--baseFontFamily: 'Comic Neue', Arial, Helvetica, sans-serif;
+  --baseFont: normal normal normal 1em/1.5 var(--baseFontFamily);
 	--baseFontWeight: bold;
 	
 	--buttonGridSize: 3rem;
@@ -49,6 +52,7 @@ body {
 	width: 100%;
 	height: 100%;
 	margin:0; padding:0;
+	color: var(--color);
 }
 
 h1 {
@@ -73,8 +77,14 @@ label, button, input, .button {
 
 .header {
 	grid-area: header;
+	padding-bottom: 1em;
 	overflow: hidden;
+	border-bottom: solid 1px;
 }
+	.header_content {
+		max-width: var(--maxContentWidth);
+		margin: 0 auto;
+	}
 
 .main {
 	grid-area: main;
@@ -82,16 +92,6 @@ label, button, input, .button {
 }
 
 .hide { display: none !important; }
-
-.mainColumn {
-	width: 90%;
-	max-width: 52rem;
-	margin: 0 auto;
-}
-
-.mainSection {
-	margin-bottom:1em;
-}
 
 .section-title,
 .section-sub-title {
@@ -126,7 +126,7 @@ label, button, input, .button {
 		box-shadow: inset 1px 1px 2px rgba(0,0,0,.8);
 	}
 	.button:focus, .button.focus {
-		background-color: var(--buttonColorActive); /* lighten(@buttonColor,20%); */
+		background-color: var(--buttonColorActive);
 	}
 
 .text-small {
@@ -146,7 +146,7 @@ label, button, input, .button {
 	flex-flow: row nowrap;
 	justify-content: space-between;
 	padding: 1em 2em;
-	margin: 1em 0 0;
+	border-top: solid 1px;
 	grid-area: footer;
 }
 
@@ -173,22 +173,15 @@ label, button, input, .button {
 		}
 
 .problems {
-	margin: 0;
-	padding: 2rem 0 5rem;
-	list-style: none outside none;
-
 	display: grid;
 	grid-template-columns: repeat(10, 1fr);
 	grid-gap: 2rem;
+	margin: 0 auto;
+	padding: 2rem;
+	max-width: var(--maxContentWidth);
+	list-style: none outside none;
 }
 .prob {
-	/* display: inline-block;
-	min-width: 2rem;
-	width: calc(var(--probWidth) - 4);
-	margin: 1rem calc((var(--probWidth) - 6) / 2 - 0.1);
-	padding: 0;
-	font-weight: bold;
-	overflow: hidden; */
 	font-weight: bold;
 	position: relative;
 }
@@ -204,8 +197,8 @@ label, button, input, .button {
 	.question .operator { position:absolute; }
 	.question .equals {
 		display: block;
-		text-indent:-9999px;
 		height:0;
+		text-indent:-9999px;
 		border-bottom: solid 1px;
 	}
 
@@ -251,7 +244,7 @@ label, button, input, .button {
 	text-shadow: 1px 1px 1px rgba(0,0,0,.5);
 	background-color:#808080;
 	position: fixed; top:0; bottom: 0; right:0; z-index: var(--z-top);
-	transition: width .5s ease-out;
+	transition: width .2s ease-out;
 }
 	.settings.open {
 		width: 300px;

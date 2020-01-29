@@ -125,10 +125,9 @@ var mt = {
 					break;
 			}
 
-			var template = _q('.prob.template').cloneNode(true);
-			template.classList.remove('template');
-			template.dataset.index = i + 1;
-			template.dataset.problemtype = probtype;
+			var template = _q('#problemTemplate').content.cloneNode(true);
+			template.querySelector('.prob').dataset.index = i + 1;
+			template.querySelector('.prob').dataset.problemtype = probtype;
 			template.querySelector('.question').setAttribute('for', 'problem'+i);
 			template.querySelector('.num-a').innerText = ''+numA;
 			template.querySelector('.num-b').innerText = ''+numB;
@@ -333,7 +332,7 @@ var mt = {
 		_q('.js-clearanswers').onclick = mt.clearanswers;
 		_q('.js-regenerate').onclick = mt.regenerate;
 
-		_qall('#MathSentences input.answer').forEach(function(ans) {
+		_qall('.problems input.answer').forEach(function(ans) {
 			const validation = mt.simpleValidateOnInput.bind(ans);
 			ans.addEventListener('change', validation);
 		});
