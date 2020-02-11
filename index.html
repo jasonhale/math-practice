@@ -13,6 +13,15 @@
 		<link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
 		<link rel="stylesheet" type="text/css" href="css/main.css">
 		<link rel="stylesheet" type="text/css" href="css/print.css" media="print">
+		<script>
+			let deferredPrompt;
+
+			window.addEventListener('beforeinstallprompt', (e) => {
+				// Stash the event so it can be triggered later.
+				deferredPrompt = e;
+				...
+			});
+		</script>
 	</head>
 	<body>
 		<button type="button" class="corny" onclick="mt.addCornify(); return false;" style="opacity:0;position:absolute;">CLICK ME!!<br/>CLICK ME NOW!!</button>

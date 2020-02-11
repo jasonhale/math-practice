@@ -24,6 +24,16 @@
 	--borderWidth: 1px;
 }
 
+@media all and (display-mode: standalone) {
+	:root {
+		color: var(--purple);
+	}
+	
+  body {
+    background-color: yellow;
+  }
+}
+
 .corny {
 	display:block;
 	padding:.5em;
