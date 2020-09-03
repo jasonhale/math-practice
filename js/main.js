@@ -25,13 +25,18 @@ var mt = {
 		multiplication : 'x',
 		division : '/'
 	},
+	problemtypesmap: {
+		addition : '/icons/operands.svg#op-add',
+		subtraction : '/icons/operands.svg#op-sub',
+		multiplication : '/icons/operands.svg#op-mul',
+		division : '/icons/operands.svg#op-div'
+	},
 	getRandomInt : function(min, max){
 		return Math.floor(Math.random() * (max - min)) + min;
 	},
 	simpleValidateOnInput : function(e){
 		var el = this;
 		var inp = e.target.value;
-		//var lastVal = inp % 10;
 		if(isNaN(inp)){
 			// if input is a string (aka 'not-a-number'), don't allow that input in the input field
 			if(inp.length > 1) { // if there was already part of an answer given...
@@ -54,18 +59,14 @@ var mt = {
 	answerModal : function(totals){
 		// assigns values to modal and shows modal.
 		totals = totals || {};
-		const mod = _q('.js-modal-answers');
-		_q('.js-modal-answers .js-total-answered').innerText = `${totals.answered}/${totals.problems}`; //.text(totals.answered+'/'+totals.problems);
-		_q('.js-modal-answers .js-total-correct').innerText = `${totals.correct}/${totals.answered}`; //.text(totals.correct+'/'+totals.answered);
-		_q('.js-modal-answers .js-total-incorrect').innerText = `${totals.answered - totals.correct}/${totals.answered}`; //.text((totals.answered-totals.correct)+'/'+totals.answered);
+		_q('.js-modal-answers .js-total-answered').innerText = `${totals.answered}/${totals.problems}`;
+		_q('.js-modal-answers .js-total-correct').innerText = `${totals.correct}/${totals.answered}`;
+		_q('.js-modal-answers .js-total-incorrect').innerText = `${totals.answered - totals.correct}/${totals.answered}`;
 		_q('.js-modal').style.display = 'flex';
 		_q('.js-modal-overlay').style.display = 'block';
 		_q('.js-modal-answers').style.display = 'block';
 	},
 	closeModal : function() {
-		// closes modal.
-		// $('.js-modal, .js-modal-overlay, .js-modal-box').hide();
-
 		_q('.js-modal').style.display = 'none';
 		_q('.js-modal-overlay').style.display = 'none';
 		_q('.js-modal-answers').style.display = 'none';
@@ -76,21 +77,12 @@ var mt = {
 		// more than one type of problem?
 		// If so, set a global setting and store a local array of only those problem types that are chosen/set.
 		var probtypes = Object.keys(mt.settings.problemtypes);
-		const multProb = probtypes.filter(t => (mt.settings.problemtypes[t] === true || mt.settings.problemtypes[t] === 'true'));
-		// var multProb = [];
-		// for(var i = 0; i < probtypes.length; i++){
-		// 	if(mt.settings.problemtypes[probtypes[i]]) multProb.push(probtypes[i]);
-		// }
-		// if ( multProb.length > 1 ) mt.settings.multProbTypes = true;
-		// else mt.settings.multProbTypes = false;
-		console.log('multProb', multProb);
-
+		const multProb = probtypes.filter(t => (mt.settings.problemtypes[t].toString() === 'true'));
 		mt.settings.multProbTypes = !!(multProb.length > 1);
 
 		for (var i = 0; i < total; i++) {
 			var numA = mt.getRandomInt(mt.settings.numbers.minNum, mt.settings.numbers.maxNum),
 				numB = mt.getRandomInt(mt.settings.numbers.minNum, mt.settings.numbers.maxNum),
-				oper = '',
 				answer,
 				probtype = '';
 
@@ -131,7 +123,7 @@ var mt = {
 			template.querySelector('.question').setAttribute('for', 'problem'+i);
 			template.querySelector('.num-a').innerText = ''+numA;
 			template.querySelector('.num-b').innerText = ''+numB;
-			template.querySelector('.operator').innerText = mt.problemtypes[probtype];
+			template.querySelector('.operator__svg use').setAttribute('href', mt.problemtypesmap[probtype]);
 			var answerNode = template.querySelector('.answer');
 			answerNode.setAttribute('id', 'problem'+i);
 			answerNode.setAttribute('tab-index', i);
@@ -258,14 +250,12 @@ var mt = {
 		};
 		console.log('s', s);
 		mt.settings = s;
-		// localStorage['MathPractice.settings'] = JSON.stringify(s);
 		localStorage.setItem('MathPractice.settings', JSON.stringify(s));
 
 		mt.itemsSet();
 	},
 	settingsGo : function() {
 		// close settings window and get new probs with new settings.
-		// mt.settingsSet();
 		mt.closeSettings();
 		mt.regenerate();
 	},
@@ -320,7 +310,6 @@ var mt = {
 		_q('.js-setnumbers').onclick = function() {
 			const a = this;
 			a.parentNode.querySelector('.js-setnumber').setAttribute('disabled', false);
-			// _q(`.js-setnumbers[id!='${a.getAttribute('id')}']`)
 			_qall('.js-setnumbers').forEach(function(setnum) {
 				if (setnum.getAttribute('id') !== a.getAttribute('id'))
 					setnum.parentNode.querySelector('.js-setnumber').setAttribute('disabled', true);
@@ -338,9 +327,6 @@ var mt = {
 		});
 
 		_q('.js-modal-continue').onclick = () => mt.closeModal();
-		/*  Lets not do this.  Makes it too easy to accidentally close the modal.
-		_q('.js-modal-overlay').onclick = () => mt.closeModal();
-		*/
 	},
 	openSettings: function() {
 		_q('.js-settings').classList.add('open');
