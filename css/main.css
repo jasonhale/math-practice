@@ -14,7 +14,8 @@
 	--color: black;
 	--purple: hsl(270, 100%, 50%);
 	--buttonColor: hsla(0, 0%, 90%, 1);
-  --buttonColorActive: hsla(230, 100%, 62%, 1);
+	--buttonColorActive: hsla(230, 100%, 62%, 1);
+	--buttonTextColor: white;
 	
 	--baseFontFamily: 'Comic Neue', Arial, Helvetica, sans-serif;
   --baseFont: normal normal normal 1em/1.5 var(--baseFontFamily);
@@ -51,7 +52,8 @@ html {
 body {
 	width: 100%;
 	height: 100%;
-	margin:0; padding:0;
+	margin: 0;
+	padding: 0;
 	color: var(--color);
 }
 
@@ -62,7 +64,7 @@ h1 {
 }
 
 label, button, input, .button {
-	cursor:pointer;
+	cursor: pointer;
 }
 
 #siteWrap {
@@ -115,9 +117,10 @@ label, button, input, .button {
 	background:none var(--buttonColor);
 	-webkit-appearance: none;
 	outline: none;
-	border:solid 1px;
+	border:solid 1px var(--color);
 }
 	.button:hover, .button.hover {
+		color: var(--buttonTextColor);
 		background-color: var(--buttonColorActive);
 		/* lighten(@buttonColor,20%); */
 		box-shadow: inset 0 0 5px rgba(0,100,255,.6);
@@ -126,6 +129,7 @@ label, button, input, .button {
 		box-shadow: inset 1px 1px 2px rgba(0,0,0,.8);
 	}
 	.button:focus, .button.focus {
+		color: var(--buttonTextColor);
 		background-color: var(--buttonColorActive);
 	}
 
