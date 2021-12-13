@@ -1,0 +1,19 @@
+name: Test Deployment Scripts
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Commenting
+      id: echoing
+      run: |
+        echo "Sample testing commands"
