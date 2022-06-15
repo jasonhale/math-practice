@@ -2,13 +2,13 @@
 <html>
 	<head>
 		<!-- Global site tag (gtag.js) - Google Analytics -->
-		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-132962399-1"></script>
+		<!-- <script async src="https://www.googletagmanager.com/gtag/js?id=UA-132962399-1"></script>
 		<script>
 			window.dataLayer = window.dataLayer || [];
 			function gtag(){dataLayer.push(arguments);}
 			gtag('js', new Date());
 			gtag('config', 'UA-132962399-1');
-		</script>
+		</script> -->
 		<title>Math Test</title>
 		<link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
 		<link rel="stylesheet" type="text/css" href="css/main.css">
@@ -46,19 +46,27 @@
 						<ul class="settings-list input-list button-list-grid validate types">
 							<li class="settings-list-item button-grid-item">
 								<input class="operand-input operand-addition button-grid-input js-settings-input js-settings-operand" type="checkbox" id="operandAddition" value="addition" checked>
-								<label class="operand-label button" for="operandAddition">+</label>
+								<label class="operand-label button" for="operandAddition">
+									<svg viewBox="0 0 24 24" width="24" height="24"><use href="/icons/operands.svg#op-add"></use></svg>
+								</label>
 							</li>
 							<li class="settings-list-item button-grid-item">
 								<input class="operand-input operand-subtraction button-grid-input js-settings-input js-settings-operand" type="checkbox" value="subtraction" id="operandSubtraction">
-								<label class="operand-label button" for="operandSubtraction">&minus;</label>
+								<label class="operand-label button" for="operandSubtraction">
+									<svg viewBox="0 0 24 24" width="24" height="24"><use href="/icons/operands.svg#op-sub"></use></svg>
+								</label>
 							</li>
 							<li class="settings-list-item button-grid-item">
 								<input class="operand-input operand-multiplication button-grid-input js-settings-input js-settings-operand" type="checkbox" value="multiplication" id="operandMultiplication">
-								<label class="operand-label button" for="operandMultiplication">x</label>
+								<label class="operand-label button" for="operandMultiplication">
+									<svg viewBox="0 0 24 24" width="24" height="24"><use href="/icons/operands.svg#op-mul"></use></svg>
+								</label>
 							</li>
 							<li class="settings-list-item button-grid-item">
 								<input class="operand-input operand-division button-grid-input js-settings-input js-settings-operand" type="checkbox" value="division" id="operandDivision">
-								<label class="operand-label button" for="operandDivision">&divide;</label>
+								<label class="operand-label button" for="operandDivision">
+									<svg viewBox="0 0 24 24" width="24" height="24"><use href="/icons/operands.svg#op-div"></use></svg>
+								</label>
 							</li>
 						</ul>
 						<div class="error-message">
@@ -123,21 +131,9 @@
 				<div class="footer__col">Got suggestions or comments?  Go to the <a href="https://github.com/jasonhale/math-practice/issues">Issues page</a> and leave a note. Thanks!</div>
 			</footer>
 		</div>
-
-		<div class="modal js-modal" style="display:none;">
-			<div class="modal__overlay js-modal-overlay" style="display:none;"></div>
-			<div class="modal__box js-modal-box js-modal-answers" style="display:none;">
-				<h2>Totals!</h2>
-				<p>
-					<label>Total answered: </label><span class="modal__answer-total js-total-answered"></span><br/>
-					<label>Total correct: </label><span class="modal__answer-total js-total-correct"></span><br/>
-					<label>Total incorrect: </label><span class="modal__answer-total js-total-incorrect"></span>
-				</p>
-				<p>
-					<button class="button modal-continue js-modal-continue">&raquo; CONTINUE &laquo;</button>
-				</p>
-			</div>
-		</div>
+		
+		<!-- New Dialog -->
+		<mp-dialog id="newd"></mp-dialog>
 
 		<template id="problemTemplate">
 			<li class="prob" data-index="" data-problemtype="">
@@ -154,6 +150,8 @@
 		</template>
 
 		<script type="text/javascript" src="js/main.js"></script>
+		<script type="text/javascript" src="js/problem.js"></script>
+		<script type="text/javascript" src="js/answerdialog.js"></script>
 		<script type="text/javascript" src="js/cornify.js"></script>
 	</body>
 </html>
