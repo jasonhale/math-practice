@@ -20,10 +20,10 @@ var mt = {
 		style : 'horizontal'
 	},
 	problemtypes : {
-		addition : '+',
-		subtraction : '-',
-		multiplication : 'x',
-		division : '/'
+		addition : '\002B', // '+',
+		subtraction : '\2212', // '-',
+		multiplication : '\00D7', // 'x',
+		division : '\00F7' // '/'
 	},
 	problemtypesmap: {
 		addition : '/icons/operands.svg#op-add',
@@ -31,13 +31,12 @@ var mt = {
 		multiplication : '/icons/operands.svg#op-mul',
 		division : '/icons/operands.svg#op-div'
 	},
-	getRandomInt : function(min, max){
-		return Math.floor(Math.random() * (max - min)) + min;
-	},
+	problems: [],
+	getRandomInt : (min, max) => Math.floor(Math.random() * (max - min)) + min,
 	simpleValidateOnInput : function(e){
 		var el = this;
 		var inp = e.target.value;
-		if(isNaN(inp)){
+		if(isNaN(inp)){ // NaN might not be the best check, here.
 			// if input is a string (aka 'not-a-number'), don't allow that input in the input field
 			if(inp.length > 1) { // if there was already part of an answer given...
 				var lastVal = inp.charAt(inp.length-1), // get the very last item in the list
@@ -53,68 +52,78 @@ var mt = {
 			el.dataset.solve = inp;
 			if (el.classList.contains('incorrect')) {
 				el.classList.add('incorrect-fixed');
+				el.setCustomValidity(''); // reset `:invalid`
 			}
 		}
 	},
-	answerModal: (totals) => _q('#newd').showScore(totals),
+	showAnswerModal: (totals) => _q('#newd').showScore(totals),
 	buildProbs : function(total){
 		// create and show problem.  Loops as many times as the current problem count is set.
 
-		// more than one type of problem?
-		// If so, set a global setting and store a local array of only those problem types that are chosen/set.
-		var probtypes = Object.keys(mt.settings.problemtypes);
-		const multProb = probtypes.filter(t => (mt.settings.problemtypes[t].toString() === 'true'));
-		mt.settings.multProbTypes = !!(multProb.length > 1);
+		const allowedProbTypes = Object.keys(mt.settings.problemtypes).filter(t => mt.settings.problemtypes[t]);
 
-		for (var i = 0; i < total; i++) {
-			var numA = mt.getRandomInt(mt.settings.numbers.minNum, mt.settings.numbers.maxNum),
+		for (let i = 0; i < total; i++) {
+			let numA = mt.getRandomInt(mt.settings.numbers.minNum, mt.settings.numbers.maxNum),
 				numB = mt.getRandomInt(mt.settings.numbers.minNum, mt.settings.numbers.maxNum),
 				answer,
 				probtype = '';
 
 			//	If there are multiple problem types, pick one at random.
 			//	Otherwise, just grab the one.
-			if (mt.settings.multProbTypes) probtype = multProb[Math.floor(Math.random() * multProb.length)];
-			else probtype = multProb[0];
-
-			// in the case of subtraction, lets just put the larger number on top for now so we don't have to deal with negative numbers.
-			if(probtype=='subtraction' && numA<numB) {
-				var tmp = numA;
-				numA = numB;
-				numB = tmp;
+			if (allowedProbTypes.length > 1) {
+				probtype = allowedProbTypes[Math.floor(Math.random() * allowedProbTypes.length)];
+			} else {
+				probtype = allowedProbTypes[0];
 			}
-
+			
 			// get answer
 			switch (probtype){
 				case 'addition':
 					answer = numA + numB;
 					break;
-
-				case 'subtraction':
+					
+					case 'subtraction': {
+					// in the case of subtraction, lets just put the larger number on top for now so we don't have to deal with negative numbers.
+					if (numA < numB) {
+						let tmp = numA;
+						numA = numB;
+						numB = tmp;
+					}
 					answer = numA - numB;
 					break;
+				}
 
 				case 'multiplication':
 					answer = numA * numB;
 					break;
 
 				case 'division':
+					// in the case of division, lets just put the larger number on top for now so we don't have to deal with silliness.
+					// TODO: work on only creating problems for division that return whole numbers
+					if (numA < numB) {
+						let tmp = numA;
+						numA = numB;
+						numB = tmp;
+					}
 					answer = numA / numB;
 					break;
 			}
 
-			var template = _q('#problemTemplate').content.cloneNode(true);
+			mt.problems.push({
+				numA, numB, answer, probtype,
+			});
+
+			const template = _q('#problemTemplate').content.cloneNode(true);
 			template.querySelector('.prob').dataset.index = i + 1;
 			template.querySelector('.prob').dataset.problemtype = probtype;
 			template.querySelector('.question').setAttribute('for', 'problem'+i);
 			template.querySelector('.num-a').innerText = ''+numA;
 			template.querySelector('.num-b').innerText = ''+numB;
 			template.querySelector('.operator__svg use').setAttribute('href', mt.problemtypesmap[probtype]);
-			var answerNode = template.querySelector('.answer');
+			const answerNode = template.querySelector('.answer');
 			answerNode.setAttribute('id', 'problem'+i);
 			answerNode.setAttribute('tab-index', i);
 			answerNode.setAttribute('name', 'answer'+i);
-			answerNode.dataset.answer = answer;
 
 			// const template = document.createElement('problem-li');
 			// console.log('template', template);
@@ -127,36 +136,44 @@ var mt = {
 		};
 	},
 	checkanswers : function() {
-		// goes through each problem and checks whether it is correct/incorrect.
+		// trying out FormData
+		const form = _q('#problemsform');
+		const data = new FormData(form);
+		for (const [key, value] of data) {
+			const index = parseInt(key.replace('answer', ''));
+			mt.problems[index].attempt = parseInt(value);
+		}
+
+		const answered = mt.problems.filter(p => !isNaN(p.attempt)).length;
+		const correct = mt.problems.filter(p => p.attempt === p.answer).length;
 		var totals = {
-			'problems'	: 0,
-			'answered'	: 0,
-			'correct'	: 0
+			'problems': mt.settings.totalProbs,
+			answered,
+			correct
 		};
-		_qall('.problems .prob').forEach((prob) => {
-			var answer = prob.querySelector('.answer');
-			var answerNum = parseInt(answer.dataset.answer);
-			var solvedNum = answer.value;
 
-			++totals.problems;
+		_qall('.problems .prob').forEach((prob, i) => {
+			const answerEl = prob.querySelector('.answer');
+			const { name, value } = answerEl;
+			const answer = mt.problems[i].answer;
 
-			if(solvedNum != ''){
-				++totals.answered;
-				if(answerNum == solvedNum){
+			if(value != ''){
+				if(answer == value){
 					// correct answer
-					answer.classList.remove('incorrect-fixed', 'incorrect');
-					answer.classList.add('correct');
-					answer.setAttribute('disabled', true);
-					++totals.correct;
+					answerEl.classList.remove('incorrect-fixed', 'incorrect');
+					answerEl.classList.add('correct');
+					answerEl.setAttribute('disabled', true);
+					answerEl.setCustomValidity('');
 				} else {
 					// incorrect answer
-					answer.classList.remove('incorrect-fixed');
-					answer.classList.add('incorrect');
+					answerEl.classList.remove('incorrect-fixed');
+					answerEl.classList.add('incorrect');
+					answerEl.setCustomValidity('Incorrect answer');
 				}
 			}
 		});
 
-		mt.answerModal(totals);
+		mt.showAnswerModal(totals);
 	},
 	clearanswers : function() {
 		// clears answers without creating new problems.
@@ -168,9 +185,11 @@ var mt = {
 		});
 	},
 	regenerate : function() {
+		mt.problems = [];
 		// remove all current problems and generate new ones.
 		mt.settingsSet();
-		_qall('.problems .prob').forEach((prob) => prob.parentNode.removeChild(prob))
+		_qall('.problems .prob').forEach((prob) => prob.parentNode.removeChild(prob));
+		// _q('.problems').innerHTML = '';
 		mt.buildProbs(mt.settings.totalProbs);
 	},
 	itemsSet : function() {
@@ -212,10 +231,10 @@ var mt = {
 	},
 	settingsSet : function() {
 		// get settings from #settingsUI and save to globals/localStorage.
-		var settings = _q('#settingsUI');
-		var s = {
+		const settings = _q('#settingsUI');
+		const s = {
 			totalProbs : parseInt(_q('.js-max-count').value),
-			problemtypes : {
+			problemtypes: {
 				addition : settings.querySelector('#operandAddition').checked,
 				subtraction : settings.querySelector('#operandSubtraction').checked,
 				multiplication : settings.querySelector('#operandMultiplication').checked,
@@ -228,9 +247,9 @@ var mt = {
 				setByTotAmt : settings.querySelector('#setNumAnsTotal').getAttribute('checked'),
 				maxAnswerTotal : parseInt(settings.querySelector('#totMaxAmt').value)
 			},
-			style : _q('.js-probstyle-input:checked').value
+			style : _q('.js-probstyle-input:checked').value,
 		};
-		console.log('s', s);
+
 		mt.settings = s;
 		localStorage.setItem('MathPractice.settings', JSON.stringify(s));
 
@@ -274,7 +293,15 @@ var mt = {
 		}
 		return validity;
 	},
-	settingsSubmit : function() {
+	settingsSubmit: (submitEvent) => {
+		const data = new FormData(submitEvent.target);
+		const formdata = {};
+		for (const [key, value] of data) {
+			formdata[key] = value;
+		}
+
+		console.log('formdata', formdata);
+
 		// run validate tests
 		var operandValid = mt.valSettingsOperands();
 		var minmaxValid = mt.valSettingsMinMax();
@@ -298,7 +325,7 @@ var mt = {
 			});
 		};
 		
-		_q('.js-settings-submit').onclick = mt.settingsSubmit;
+		// _q('.js-settings-submit').onclick = mt.settingsSubmit;
 		_q('.js-checkanswers').onclick = mt.checkanswers;
 		_q('.js-clearanswers').onclick = mt.clearanswers;
 		_q('.js-regenerate').onclick = mt.regenerate;
@@ -307,6 +334,8 @@ var mt = {
 			const validation = mt.simpleValidateOnInput.bind(ans);
 			ans.addEventListener('change', validation);
 		});
+
+		_q('#settingsform').addEventListener('submit', (submitEvent) => mt.settingsSubmit(submitEvent));
 	},
 	openSettings: function() {
 		_q('.js-settings').classList.add('open');

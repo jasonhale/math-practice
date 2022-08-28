@@ -61,8 +61,6 @@ class AnswerDialog extends HTMLElement {
 	}
 
 	close() {
-		// const d = this.shadowRoot.querySelector('.mpd');
-		// this.querySelector('.mpd');
 		this.dialog.close();
 	}
 

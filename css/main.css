@@ -199,6 +199,11 @@ label, button, input, .button {
 	font-size: 1em;
 	text-align: right;
 	border: 0 none;
+	appearance: textfield;
+}
+.answer::-webkit-inner-spin-button, 
+.answer::-webkit-outer-spin-button {
+	display: none;
 }
 	.answer[data-solve*='0'],
 	.answer[data-solve*='1'],
