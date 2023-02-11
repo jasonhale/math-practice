@@ -209,8 +209,6 @@ var mt = {
 			}
 		}
 
-		console.log('setInitialSettings', mt.settings);
-		
 		// assign values to markup
 		const s = mt.settings;
 		_q('#operandAddition').checked = s.problemtypes.addition;

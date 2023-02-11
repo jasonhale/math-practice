@@ -38,25 +38,25 @@
 							<h3 class="section-sub-title">Problem Types</h3>
 							<ul class="settings-list input-list button-list-grid validate types">
 								<li class="settings-list-item button-grid-item">
-									<input class="operand-input operand-addition button-grid-input js-settings-input js-settings-operand" type="checkbox" id="operandAddition" value="addition" checked>
+									<input name="operandtype" class="operand-input operand-addition button-grid-input js-settings-input js-settings-operand" type="checkbox" id="operandAddition" value="addition">
 									<label class="operand-label button" for="operandAddition">
 										<svg viewBox="0 0 24 24" width="24" height="24"><use href="/icons/operands.svg#op-add"></use></svg>
 									</label>
 								</li>
 								<li class="settings-list-item button-grid-item">
-									<input class="operand-input operand-subtraction button-grid-input js-settings-input js-settings-operand" type="checkbox" value="subtraction" id="operandSubtraction">
+									<input name="operandtype" class="operand-input operand-subtraction button-grid-input js-settings-input js-settings-operand" type="checkbox" value="subtraction" id="operandSubtraction">
 									<label class="operand-label button" for="operandSubtraction">
 										<svg viewBox="0 0 24 24" width="24" height="24"><use href="/icons/operands.svg#op-sub"></use></svg>
 									</label>
 								</li>
 								<li class="settings-list-item button-grid-item">
-									<input class="operand-input operand-multiplication button-grid-input js-settings-input js-settings-operand" type="checkbox" value="multiplication" id="operandMultiplication">
+									<input name="operandtype" class="operand-input operand-multiplication button-grid-input js-settings-input js-settings-operand" type="checkbox" value="multiplication" id="operandMultiplication">
 									<label class="operand-label button" for="operandMultiplication">
 										<svg viewBox="0 0 24 24" width="24" height="24"><use href="/icons/operands.svg#op-mul"></use></svg>
 									</label>
 								</li>
 								<li class="settings-list-item button-grid-item">
-									<input class="operand-input operand-division button-grid-input js-settings-input js-settings-operand" type="checkbox" value="division" id="operandDivision">
+									<input name="operandtype" class="operand-input operand-division button-grid-input js-settings-input js-settings-operand" type="checkbox" value="division" id="operandDivision">
 									<label class="operand-label button" for="operandDivision">
 										<svg viewBox="0 0 24 24" width="24" height="24"><use href="/icons/operands.svg#op-div"></use></svg>
 									</label>
@@ -74,11 +74,11 @@
 									<label class="settings-sub-subtitle button radio-section-label" for="setNumMinMax">by Min/Max Numbers</label>
 									<div class="settings-sublist-item radio-section-item">
 										<label for="smNumSize">Smallest Number</label>
-										<input class="js-setnumber js-numsize radio-section-item-input" type="number" value="0" min="0" id="smNumSize">
+										<input name="smallnumbersize" class="js-setnumber js-numsize radio-section-item-input" type="number" min="0" id="smNumSize">
 									</div>
 									<div class="settings-sublist-item radio-section-item">
 										<label for="lgNumSize">Largest Number</label>
-										<input class="js-setnumber js-numsize radio-section-item-input" type="number" value="9" min="0" id="lgNumSize">
+										<input name="largenumbersize" class="js-setnumber js-numsize radio-section-item-input" type="number" min="0" id="lgNumSize">
 									</div>
 									<div class="error-message">
 										<span>Smallest Number must be smaller than Largest Number</span>
@@ -89,7 +89,7 @@
 									<label class="settings-sub-subtitle button radio-section-label" for="setNumAnsTotal">by Answer Total</label>
 									<div class="settings-sublist-item radio-section-item">
 										<label for="totMaxAmt">Total Max Amount</label>
-										<input class="js-setnumber js-totmaxamt radio-section-item-input" type="number" value="20" min="0" id="totMaxAmt" disabled>
+										<input name="totalmaxamount" class="js-setnumber js-totmaxamt radio-section-item-input" type="number" value="20" min="0" id="totMaxAmt" disabled>
 									</div>
 								</li>
 							</ul>
@@ -98,11 +98,11 @@
 							<h3 class="section-sub-title">Style</h3>
 							<ul class="settings-list input-list input-radio button-list-grid">
 								<li class="settings-list-item button-grid-item">
-									<input class="probstyle-input probstyle-vertical js-probstyle-input button-grid-input" type="radio" id="probstyleVertical" name="probstyle" value="vertical" checked>
+									<input name="probstyle" class="probstyle-input probstyle-vertical js-probstyle-input button-grid-input" type="radio" id="probstyleVertical" name="probstyle" value="vertical">
 									<label class="probstyle-label button" for="probstyleVertical"><i class="fa fa-arrows-v"></i><span class="hide">Vertical</span></label>
 								</li>
 								<li class="settings-list-item button-grid-item">
-									<input class="probstyle-input probstyle-horizontal js-probstyle-input button-grid-input" type="radio" id="probstyleHorizontal" name="probstyle" value="horizontal">
+									<input name="probstyle" class="probstyle-input probstyle-horizontal js-probstyle-input button-grid-input" type="radio" id="probstyleHorizontal" name="probstyle" value="horizontal">
 									<label class="probstyle-label button" for="probstyleHorizontal"><i class="fa fa-arrows-h"></i><span class="hide">Horizontal</span></label>
 								</li>
 							</ul>
